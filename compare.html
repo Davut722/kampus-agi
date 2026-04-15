@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karşılaştır — UniReview</title>
+    <link rel="stylesheet" href="css/style.css?v=46">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        @media (max-width: 768px) {
+            .compare-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .compare-col {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .compare-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            margin-top: var(--space-md);
+        }
+
+        .compare-section {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border);
+        }
+    </style>
+</head>
+
+<body data-page="compare">
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav__inner">
+            <a href="index.html" class="nav__logo"><span class="nav__logo-icon">🎓</span> UniReview</a>
+            <button class="nav__hamburger" aria-label="Menüyü aç">
+                <span class="nav__hamburger-line"></span>
+                <span class="nav__hamburger-line"></span>
+                <span class="nav__hamburger-line"></span>
+            </button>
+            <ul class="nav__links">
+                <li><a href="index.html" class="nav__link">Ana Sayfa</a></li>
+                <li><a href="university.html" class="nav__link">Üniversite</a></li>
+                <li><a href="compare.html" class="nav__link nav__link--active">Karşılaştır</a></li>
+                <li><a href="review-form.html" class="nav__link">Değerlendir</a></li>
+                <li><a href="profile.html" class="nav__link">Profilim</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="section-title">Üniversite <span>Karşılaştırma Aracı</span> ⚖️</h1>
+        <p class="section-desc" style="color: var(--color-text-muted);">İki farklı üniversiteyi seçerek aralarındaki
+            farkları, puan durumlarını ve olanakları yan yana inceleyin.</p>
+
+        <div class="compare-container">
+            <div class="compare-col">
+                <div class="custom-select" id="custom-uni-select-1">
+                    <div class="custom-select__trigger">
+                        <span class="custom-select__text">1. Üniversiteyi seçin...</span>
+                        <span class="custom-select__icon">▼</span>
+                    </div>
+                    <div class="custom-select__dropdown">
+                        <input type="text" class="custom-select__search" placeholder="Ara...">
+                        <ul class="custom-select__options"></ul>
+                    </div>
+                </div>
+                <div id="compare-result-1"></div>
+            </div>
+
+            <div class="compare-col">
+                <div class="custom-select" id="custom-uni-select-2">
+                    <div class="custom-select__trigger">
+                        <span class="custom-select__text">2. Üniversiteyi seçin...</span>
+                        <span class="custom-select__icon">▼</span>
+                    </div>
+                    <div class="custom-select__dropdown">
+                        <input type="text" class="custom-select__search" placeholder="Ara...">
+                        <ul class="custom-select__options"></ul>
+                    </div>
+                </div>
+                <div id="compare-result-2"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/uni_images_data.js" defer></script>
+    <script src="js/uni_websites_data.js" defer></script>
+    <script src="js/universities.js" defer></script>
+    <script type="module" src="js/app.js?v=47"></script>
+</body>
+
+</html>
