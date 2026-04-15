@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Değerlendir — UniReview</title>
+    <link rel="stylesheet" href="css/style.css?v=46">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+
+<body data-page="review-form">
+    <nav class="nav">
+        <div class="nav__inner">
+            <a href="index.html" class="nav__logo"><span class="nav__logo-icon">🎓</span> UniReview</a>
+            <button class="nav__hamburger" aria-label="Menüyü aç">
+                <span class="nav__hamburger-line"></span>
+                <span class="nav__hamburger-line"></span>
+                <span class="nav__hamburger-line"></span>
+            </button>
+            <ul class="nav__links">
+                <li><a href="index.html" class="nav__link">Ana Sayfa</a></li>
+                <li><a href="university.html" class="nav__link">Üniversite</a></li>
+                <li><a href="compare.html" class="nav__link">Karşılaştır</a></li>
+                <li><a href="review-form.html" class="nav__link nav__link--active">Değerlendir</a></li>
+                <li><a href="profile.html" class="nav__link">Profilim</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="profile-card" style="max-width: 600px; margin: var(--space-xl) auto;">
+            <div class="profile-card__header">
+                <h2 class="profile-card__title">Yeni Değerlendirme Ekle</h2>
+            </div>
+            <div class="profile-card__content">
+                <form id="add-review-form" class="form">
+                    <div class="form__group">
+                        <label class="form__label">Üniversite Seçin</label>
+                        <div class="custom-select" id="custom-uni-select-form">
+                            <div class="custom-select__trigger">
+                                <span class="custom-select__text">Üniversite seçin...</span>
+                                <span class="custom-select__icon">▼</span>
+                            </div>
+                            <div class="custom-select__dropdown">
+                                <input type="text" class="custom-select__search" placeholder="Ara...">
+                                <ul class="custom-select__options"></ul>
+                            </div>
+                        </div>
+                        <input type="hidden" id="form-uni-hidden" required>
+                    </div>
+
+                    <div class="form__group">
+                        <label class="form__label">Puanınız (1-5)</label>
+                        <div id="star-rating" class="stars stars--interactive" style="font-size: 2rem;">
+                            <span class="stars__item" data-value="1">★</span>
+                            <span class="stars__item" data-value="2">★</span>
+                            <span class="stars__item" data-value="3">★</span>
+                            <span class="stars__item" data-value="4">★</span>
+                            <span class="stars__item" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" id="form-rating" value="0" required>
+                    </div>
+
+                    <div class="form__group">
+                        <label class="form__label" for="form-text">Değerlendirmeniz</label>
+                        <textarea id="form-text" class="form__input" rows="5"
+                            placeholder="Üniversiteniz hakkında düşüncelerinizi detaylıca yazın..." required></textarea>
+                        <div style="text-align: right; margin-top: 5px;">
+                            <small id="char-count" style="color: var(--color-text-muted);">0 / 500</small>
+                        </div>
+                    </div>
+
+                    <div class="form__group">
+                        <label class="form__label">Etiketler (En fazla 3 adet)</label>
+                        <div id="form-tags" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
+                        <input type="hidden" id="form-tags-hidden" value="">
+                    </div>
+
+                    <button type="submit" class="btn btn--primary" style="width: 100%;">Paylaş ✨</button>
+                    <div id="preview-container" style="margin-top: 20px;"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/uni_images_data.js"></script>
+    <script src="js/uni_websites_data.js"></script>
+    <script src="js/universities.js"></script>
+    <script type="module" src="js/app.js?v=46"></script>
+</body>
+
+</html>
