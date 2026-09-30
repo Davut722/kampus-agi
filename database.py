@@ -1,0 +1,177 @@
+import os
+import json
+import time
+from datetime import datetime
+from sqlalchemy import create_engine, Column, Integer, BigInteger, String, Text, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship
+
+# ---------------------------------------------------------------------------
+# Database configuration
+# ---------------------------------------------------------------------------
+# MySQL bağlantısı – XAMPP varsayılan: kullanıcı root, şifre boş.
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost/unireview"
+DATABASE_URL = os.getenv("DATABASE_URL", SQLALCHEMY_DATABASE_URL)
+
+# Engine creation – SQLite uses a special connect_args, MySQL (or others) do not.
+try:
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {},
+        pool_pre_ping=True,
+    )
+except Exception as e:
+    print(f"[ERROR] Failed to create database engine: {e}")
+    raise
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(150), unique=True, index=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    initials = Column(String(10), default="MS")
+    photo_url = Column(String(255), default="")
+    university = Column(String(150), default="")
+    department = Column(String(150), default="")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    reviews = relationship("Review", back_populates="user", cascade="all, delete-orphan")
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    user_name = Column(String(100), nullable=False)
+    initials = Column(String(10), default="MS")
+    university = Column(String(150), index=True, nullable=False)
+    rating = Column(Integer, default=5)
+    tags_json = Column(Text, default="[]")  # stored as JSON string
+    text = Column(Text, nullable=False)
+    timestamp = Column(BigInteger, default=lambda: int(time.time() * 1000))
+    date = Column(String(50), nullable=False)
+
+    user = relationship("User", back_populates="reviews")
+    replies = relationship(
+        "Reply",
+        back_populates="review",
+        cascade="all, delete-orphan",
+        order_by="Reply.id.asc()",
+    )
+    interactions = relationship(
+        "Interaction",
+        back_populates="review",
+        cascade="all, delete-orphan",
+    )
+
+    def to_dict(self, current_user_name=None):
+        try:
+            tags = json.loads(self.tags_json)
+        except Exception:
+            tags = []
+        likes = [i.user_name for i in self.interactions if i.interaction_type == "like"]
+        dislikes = [i.user_name for i in self.interactions if i.interaction_type == "dislike"]
+        return {
+            "id": self.id,
+            "user": self.user_name,
+            "initials": self.initials,
+            "university": self.university,
+            "rating": self.rating,
+            "tags": tags,
+            "text": self.text,
+            "timestamp": self.timestamp,
+            "date": self.date,
+            "replies": [r.to_dict() for r in self.replies],
+            "likes": likes,
+            "dislikes": dislikes,
+        }
+
+class Reply(Base):
+    __tablename__ = "replies"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    review_id = Column(Integer, ForeignKey("reviews.id", ondelete="CASCADE"), nullable=False)
+    user_name = Column(String(100), nullable=False)
+    text = Column(Text, nullable=False)
+    date = Column(String(50), nullable=False)
+    timestamp = Column(BigInteger, default=lambda: int(time.time() * 1000))
+
+    review = relationship("Review", back_populates="replies")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user": self.user_name,
+            "text": self.text,
+            "date": self.date,
+        }
+
+class Interaction(Base):
+    __tablename__ = "interactions"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    review_id = Column(Integer, ForeignKey("reviews.id", ondelete="CASCADE"), nullable=False)
+    user_name = Column(String(100), nullable=False)
+    interaction_type = Column(String(20), nullable=False)  # 'like' or 'dislike'
+
+    __table_args__ = (
+        UniqueConstraint("review_id", "user_name", name="uq_review_user_interaction"),
+    )
+
+    review = relationship("Review", back_populates="interactions")
+
+def init_db():
+    # Create missing tables without deleting persisted user data.
+    Base.metadata.create_all(bind=engine)
+
+    # Add sample seed data if the reviews table is empty
+    db = SessionLocal()
+    try:
+        if db.query(Review).count() == 0:
+            sample_reviews = [
+                Review(
+                    user_name="Ahmet Yılmaz",
+                    initials="AY",
+                    university="Boğaziçi Üniversitesi",
+                    rating=5,
+                    tags_json=json.dumps(["kampus", "egitim", "sosyal"]),
+                    text="Güney kampüsün manzarası ve kütüphane ortamı muhteşem. Kulüp aktiviteleri ve akademik kadro gerçekten Türkiye'nin zirvesinde.",
+                    date="15 Şub 2026",
+                    timestamp=int(time.time() * 1000) - 86400000 * 5,
+                ),
+                Review(
+                    user_name="Zeynep Kaya",
+                    initials="ZK",
+                    university="Orta Doğu Teknik Üniversitesi (ODTÜ)",
+                    rating=5,
+                    tags_json=json.dumps(["kampus", "egitim", "kutuphane"]),
+                    text="ODTÜ kültürü bambaşka bir deneyim. Geniş ormanlık kampüsü, devasa kütüphanesi ve zorlayıcı ama çok şey katan mühendislik eğitimi var.",
+                    date="20 Şub 2026",
+                    timestamp=int(time.time() * 1000) - 86400000 * 3,
+                ),
+                Review(
+                    user_name="Burak Demir",
+                    initials="BD",
+                    university="Bandırma Onyedi Eylül Üniversitesi",
+                    rating=4,
+                    tags_json=json.dumps(["kampus", "ulasim"]),
+                    text="Denizcilik fakültesi çok iyi. İstanbul'dan feribotla ulaşım oldukça pratik ve şehir öğrenci için sakin ve ekonomik.",
+                    date="01 Mar 2026",
+                    timestamp=int(time.time() * 1000) - 86400000,
+                ),
+            ]
+            db.add_all(sample_reviews)
+            db.commit()
+    finally:
+        db.close()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

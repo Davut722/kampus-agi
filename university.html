@@ -3,119 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Üniversite Detay — UniReview</title>
-    <link rel="stylesheet" href="css/style.css?v=46">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <meta http-equiv="refresh" content="0; url=index.html#/university">
+    <script>
+        const query = window.location.search || '';
+        window.location.replace('index.html#/university' + query);
+    </script>
+    <title>Yönlendiriliyor... — UniReview</title>
 </head>
 
-<body data-page="university">
-    <nav class="nav">
-        <div class="nav__inner">
-            <a href="index.html" class="nav__logo"><span class="nav__logo-icon">🎓</span> UniReview</a>
-            <button class="nav__hamburger" aria-label="Menüyü aç">
-                <span class="nav__hamburger-line"></span>
-                <span class="nav__hamburger-line"></span>
-                <span class="nav__hamburger-line"></span>
-            </button>
-            <ul class="nav__links">
-                <li><a href="index.html" class="nav__link">Ana Sayfa</a></li>
-                <li><a href="university.html" class="nav__link nav__link--active">Üniversite</a></li>
-                <li><a href="compare.html" class="nav__link">Karşılaştır</a></li>
-                <li><a href="review-form.html" class="nav__link">Değerlendir</a></li>
-                <li><a href="profile.html" class="nav__link">Profilim</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <main class="container">
-        <div class="uni-selector" id="uni-selector">
-            <label class="uni-selector__label">📍 Üniversite Seçin</label>
-            <div class="custom-select" id="custom-uni-select">
-                <div class="custom-select__trigger">
-                    <span class="custom-select__text">Üniversite seçin...</span>
-                    <span class="custom-select__icon">▼</span>
-                </div>
-                <div class="custom-select__dropdown">
-                    <input type="text" class="custom-select__search" placeholder="Üniversite ara...">
-                    <ul class="custom-select__options"></ul>
-                </div>
-            </div>
-        </div>
-
-        <header class="profile-hero" id="uni-hero" style="margin-top: var(--space-xl);">
-            <div class="profile-hero__bg">
-                <img id="hero-blur-img" class="profile-hero__bg-blur"
-                    src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=2070"
-                    alt="" aria-hidden="true">
-                <img id="hero-img" class="profile-hero__bg-img"
-                    src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=2070"
-                    alt="Üniversite Kampüsü">
-                <div class="profile-hero__overlay"></div>
-            </div>
-            <div class="profile-hero__content container reveal-up">
-                <h1 class="profile-hero__title" id="uni-hero-title">Bandırma Onyedi Eylül Üniversitesi</h1>
-                <p class="profile-hero__subtitle" id="uni-hero-subtitle">📍 Balıkesir, Türkiye</p>
-                <a href="#" id="uni-website-btn" target="_blank" rel="noopener noreferrer"
-                    class="btn btn--outline profile-hero__btn">
-                    📍 Resmi Web Sitesine Git
-                </a>
-            </div>
-        </header>
-
-        <div class="profile-main">
-            <section class="profile-section reveal-up">
-                <div class="profile-card about-card">
-                    <div class="profile-card__header">
-                        <h2 class="profile-card__title">Üniversite Hakkında</h2>
-                    </div>
-                    <div class="profile-card__content about-content">
-                        <p id="about-text-short">Yükleniyor...</p>
-                        <div class="about-content__extended" id="about-extended">
-                            <p id="about-text-long"></p>
-                        </div>
-                    </div>
-                    <button class="btn btn--text about-toggle-btn" id="about-toggle-btn">
-                        Daha Fazla Oku ▼
-                    </button>
-                </div>
-            </section>
-
-            <section class="profile-section reveal-up" style="animation-delay: 0.1s;">
-                <h2 class="section-title">Canlı <span>Ulaşım Modülü</span></h2>
-                <p class="section-desc">Çevre illerden bu üniversiteye ulaşım imkanlarını keşfedin.</p>
-                <div class="transport-grid" id="transport-grid"></div>
-            </section>
-
-            <section class="profile-section hero__stats reveal-up"
-                style="animation-delay: 0.2s; padding: var(--space-lg); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);">
-                <div class="hero__stat">
-                    <div class="hero__stat-value" id="stat-avg">—</div>
-                    <div class="hero__stat-label">Ortalama Puan</div>
-                </div>
-                <div class="hero__stat">
-                    <div class="hero__stat-value" id="stat-count">—</div>
-                    <div class="hero__stat-label">Değerlendirme</div>
-                </div>
-                <div class="hero__stat">
-                    <div class="hero__stat-value" id="stat-rank">Top 3</div>
-                    <div class="hero__stat-label">Türkiye Sıralaması</div>
-                </div>
-            </section>
-
-            <section class="profile-section reveal-up" style="animation-delay: 0.3s; margin-bottom: var(--space-md);">
-                <h2 class="section-title">📋 Öğrenci <span>Değerlendirmeleri</span></h2>
-                <div class="filter-bar" id="filter-bar"></div>
-            </section>
-
-            <div id="reviews-container"></div>
-        </div>
-    </main>
-
-    <script src="js/uni_images_data.js" defer></script>
-    <script src="js/uni_websites_data.js" defer></script>
-    <script src="js/universities.js" defer></script>
-    <script type="module" src="js/app.js?v=47"></script>
+<body>
+    <p style="font-family:sans-serif; text-align:center; margin-top:50px;">Yönlendiriliyor... <a
+            href="index.html#/university">Tıklayın</a></p>
 </body>
 
 </html>

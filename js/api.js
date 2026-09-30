@@ -1,0 +1,147 @@
+/* ========================================
+   UNI-REVIEW — REST API Client (FastAPI Backend)
+   ======================================== */
+
+const API_BASE = 'http://127.0.0.1:8000/api';
+
+function getToken() {
+    return localStorage.getItem('unireview_token');
+}
+
+function setToken(token) {
+    if (token) {
+        localStorage.setItem('unireview_token', token);
+    } else {
+        localStorage.removeItem('unireview_token');
+    }
+}
+
+async function request(endpoint, options = {}) {
+    const url = `${API_BASE}${endpoint}`;
+    const token = getToken();
+
+    const headers = {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(url, {
+        ...options,
+        headers
+    });
+
+    if (!response.ok) {
+        let errorMsg = 'Bir hata oluştu.';
+        try {
+            const data = await response.json();
+            errorMsg = data.detail || data.message || errorMsg;
+        } catch (e) { }
+        throw new Error(errorMsg);
+    }
+
+    return await response.json();
+}
+
+export const api = {
+    // Auth
+    async register(name, email, password) {
+        const data = await request('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ name, email, password })
+        });
+        setToken(data.token);
+        return data.user;
+    },
+
+    async login(email, password) {
+        const data = await request('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+        setToken(data.token);
+        return data.user;
+    },
+
+    async getMe() {
+        const token = getToken();
+        if (!token) return null;
+        try {
+            return await request('/auth/me');
+        } catch (e) {
+            setToken(null);
+            return null;
+        }
+    },
+
+    async getMyProfile() {
+        return await request('/users/me');
+    },
+
+    async getMyReviews() {
+        return await request('/users/me/reviews');
+    },
+
+    async updateMyProfile(profileData) {
+        return await request('/users/me', {
+            method: 'PATCH',
+            body: JSON.stringify(profileData)
+        });
+    },
+
+    logout() {
+        setToken(null);
+    },
+
+    // Reviews
+    async getReviews(params = {}) {
+        const query = new URLSearchParams(params).toString();
+        const endpoint = `/reviews${query ? '?' + query : ''}`;
+        return await request(endpoint);
+    },
+
+    async createReview(reviewData) {
+        return await request('/reviews', {
+            method: 'POST',
+            body: JSON.stringify({
+                university: reviewData.university,
+                rating: reviewData.rating,
+                tags: reviewData.tags,
+                text: reviewData.text
+            })
+        });
+    },
+
+    async deleteReview(reviewId) {
+        return await request(`/reviews/${reviewId}`, {
+            method: 'DELETE'
+        });
+    },
+
+    async addReply(reviewId, text) {
+        return await request(`/reviews/${reviewId}/reply`, {
+            method: 'POST',
+            body: JSON.stringify({ text })
+        });
+    },
+
+    // Interactions
+    async toggleLike(reviewId) {
+        return await request(`/reviews/${reviewId}/like`, {
+            method: 'POST'
+        });
+    },
+
+    async toggleDislike(reviewId) {
+        return await request(`/reviews/${reviewId}/dislike`, {
+            method: 'POST'
+        });
+    },
+
+    async getInteractions() {
+        return await request('/interactions');
+    }
+};

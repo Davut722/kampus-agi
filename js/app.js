@@ -1,111 +1,103 @@
 /* ========================================
-   UNI-REVIEW — Shared JavaScript
+   UNI-REVIEW — Shared JavaScript (SPA Architecture + FastAPI Backend)
    ======================================== */
 
-import { auth, db } from './firebase-config.js';
-import { 
-    signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword, 
-    signOut, 
-    onAuthStateChanged,
-    updateProfile 
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-import { 
-    collection, 
-    addDoc, 
-    onSnapshot, 
-    doc, 
-    updateDoc, 
-    deleteDoc, 
-    arrayUnion,
-    arrayRemove,
-    getDocs,
-    setDoc
-} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { api } from './api.js';
+import { TEMPLATES } from './templates.js';
 
 function getInitials(name) {
     if (!name) return 'MS';
-    const words = name.split(' ');
+    const words = name.trim().split(' ');
     let initials = words[0][0].toUpperCase();
     if (words.length > 1) initials += words[words.length - 1][0].toUpperCase();
     return initials;
 }
 
-function checkProtected() {
-    const protectedPages = ['profile.html', 'review-form.html'];
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    if (protectedPages.includes(currentPage) && currentPage !== 'index.html') {
-        if (CURRENT_USER && CURRENT_USER.uid !== 'guest') return;
-        window.location.href = 'login.html';
+// ─── SPA Router State ─────────────────────
+let currentRoute = 'home';
+let currentParams = new URLSearchParams();
+let selectedUniState = 'Boğaziçi Üniversitesi';
+
+const activeRenderers = {
+    university: null,
+    profile: null,
+    compare: null
+};
+
+export function parseHash() {
+    const hash = window.location.hash || '#/home';
+    const cleanHash = hash.replace(/^#\/?/, '') || 'home';
+    const [path, queryString] = cleanHash.split('?');
+    const params = new URLSearchParams(queryString || '');
+    let route = path.toLowerCase();
+    if (!route || route === '/' || route === 'index.html' || route === 'home') route = 'home';
+    return { route, params };
+}
+
+export function navigateTo(targetRoute, paramsObj = null) {
+    let hash = `#/${targetRoute}`;
+    if (paramsObj) {
+        const query = new URLSearchParams(paramsObj).toString();
+        if (query) hash += `?${query}`;
+    }
+    if (window.location.hash !== hash) {
+        window.location.hash = hash;
+    } else {
+        renderCurrentRoute();
     }
 }
 
-// ─── Firebase Auth Wrapper ────────────────
-window.signUpFirebase = async function(name, email, pass) {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-    await updateProfile(userCredential.user, { displayName: name });
-    return userCredential.user;
-};
+function checkProtected() {
+    const { route, params } = parseHash();
+    const protectedRoutes = ['review-form'];
+    if (route === 'profile' && !params.get('user')) {
+        protectedRoutes.push('profile');
+    }
+    if (protectedRoutes.includes(route)) {
+        if (CURRENT_USER && CURRENT_USER.uid !== 'guest') return;
+        showToast('⚠️ Bu sayfayı görüntülemek için lütfen giriş yapın.');
+        navigateTo('login');
+    }
+}
 
-window.signInFirebase = async function(email, pass) {
-    const userCredential = await signInWithEmailAndPassword(auth, email, pass);
-    return userCredential.user;
-};
-
-window.signOutFirebase = async function() {
-    await signOut(auth);
-};
-
-// ─── Mock Data ────────────────────────────
-// Note: TURKISH_UNIVERSITIES is loaded globally via universities.js
-
-const AVAILABLE_TAGS = [
-    { id: 'kampus', label: '🏫 Kampüs', icon: '🏫' },
-    { id: 'yemekhane', label: '🍽️ Yemekhane', icon: '🍽️' },
-    { id: 'egitim', label: '📚 Eğitim', icon: '📚' },
-    { id: 'kutuphane', label: '📖 Kütüphane', icon: '📖' },
-    { id: 'sosyal', label: '🎉 Sosyal Hayat', icon: '🎉' },
-    { id: 'ulasim', label: '🚌 Ulaşım', icon: '🚌' },
-    { id: 'yurt', label: '🏠 Yurt Olanakları', icon: '🏠' },
-];
-
+// ─── User State & Auth Handlers ───────────
 let CURRENT_USER = { uid: 'guest', name: 'Misafir', initials: 'MS', email: '' };
-let authStateResolved = false;
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        CURRENT_USER = {
-            uid: user.uid,
-            name: user.displayName || user.email.split('@')[0],
-            initials: getInitials(user.displayName || user.email.split('@')[0]),
-            email: user.email
-        };
-        updateNavForUser(CURRENT_USER);
-        
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        if (currentPage === 'login.html') {
-            window.location.href = 'index.html';
-        }
-    } else {
-        CURRENT_USER = { uid: 'guest', name: 'Misafir', initials: 'MS', email: '' };
-        updateNavForUser(null);
-        checkProtected();
-    }
+window.signUpBackend = async function(name, email, pass) {
+    const user = await api.register(name, email, pass);
+    CURRENT_USER = {
+        uid: user.id,
+        name: user.name,
+        initials: user.initials || getInitials(user.name),
+        email: user.email
+    };
+    updateNavForUser(CURRENT_USER);
+    showToast(`🎉 Hoş geldin, ${user.name}!`);
+    navigateTo('home');
+    return user;
+};
 
-    if (!authStateResolved) {
-        authStateResolved = true;
-        window.dispatchEvent(new Event('auth-ready'));
-    }
-});
+window.signInBackend = async function(email, pass) {
+    const user = await api.login(email, pass);
+    CURRENT_USER = {
+        uid: user.id,
+        name: user.name,
+        initials: user.initials || getInitials(user.name),
+        email: user.email
+    };
+    updateNavForUser(CURRENT_USER);
+    showToast(`👋 Tekrar hoş geldin, ${user.name}!`);
+    navigateTo('home');
+    return user;
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (CURRENT_USER.uid !== 'guest') {
-        updateNavForUser(CURRENT_USER);
-    } else {
-        updateNavForUser(null);
-        // Do NOT checkProtected() synchronously here, let onAuthStateChanged handle it
-    }
-});
+window.signOutBackend = async function() {
+    api.logout();
+    CURRENT_USER = { uid: 'guest', name: 'Misafir', initials: 'MS', email: '' };
+    updateNavForUser(null);
+    showToast('👋 Başarıyla çıkış yapıldı.');
+    navigateTo('home');
+};
 
 function updateNavForUser(user) {
     const navLinks = document.querySelector('.nav__links');
@@ -153,129 +145,63 @@ function updateNavForUser(user) {
         });
     }
 
-    // Hide protected links if not logged in
-    const navAnchors = Array.from(navLinks.querySelectorAll('a'));
-    const profileLink = navAnchors.find(a => a.getAttribute('href') === 'profile.html');
-    const reviewLink = navAnchors.find(a => a.getAttribute('href') === 'review-form.html');
-
     if (user && user.uid !== 'guest') {
-        authLinkLi.innerHTML = `<a href="#" id="logout-btn" class="nav__link" style="color: var(--color-danger); cursor: pointer;">Çıkış (${user.name})</a>`;
+        authLinkLi.innerHTML = `<a href="#/home" id="logout-btn" class="nav__link" style="color: var(--color-danger); cursor: pointer;">Çıkış (${user.name})</a>`;
 
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
-                try {
-                    await window.signOutFirebase();
-                    // onAuthStateChanged will handle redirect
-                } catch(error) {
-                    console.error("Çıkış hatası:", error);
-                }
+                await window.signOutBackend();
             });
         }
     } else {
-        authLinkLi.innerHTML = `<a href="login.html" class="nav__link">Giriş Yap</a>`;
+        authLinkLi.innerHTML = `<a href="#/login" class="nav__link" data-nav="login">Giriş Yap</a>`;
     }
 }
 
-// ─── State Management (Firestore Synced) ─────
+// ─── Global State & API Sync ──────────────
 let globalReviewsState = [];
 let globalInteractionsState = {};
 
-export function initFirebaseListeners(onInitCallback, onRefreshCallback) {
-    let initialized = false;
-    let reviewsReady = false;
-    let interactionsReady = false;
-
-    function checkAndInit() {
-        if (reviewsReady && interactionsReady && !initialized) {
-            initialized = true;
-            try { if (onInitCallback) onInitCallback(); } catch(e) { console.error('Init error:', e); }
-        } else if (initialized) {
-            try { if (onRefreshCallback) onRefreshCallback(); } catch(e) { console.error('Refresh error:', e); }
-        }
-    }
-
-    // Fallback: if Firebase doesn't respond in 8 seconds, init anyway with empty data
-    const fallbackTimer = setTimeout(() => {
-        if (!initialized) {
-            reviewsReady = true;
-            interactionsReady = true;
-            checkAndInit();
-        }
-    }, 8000);
-
+export async function refreshAppData() {
     try {
-        const reviewsRef = collection(db, "reviews");
-        onSnapshot(reviewsRef, (snapshot) => {
-            const reviews = [];
-            snapshot.forEach((docSnap) => {
-                reviews.push({ id: docSnap.id, ...docSnap.data() });
-            });
-            globalReviewsState = reviews.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            reviewsReady = true;
-            clearTimeout(fallbackTimer);
-            checkAndInit();
-        }, (err) => {
-            console.error('Reviews snapshot error:', err);
-            reviewsReady = true;
-            checkAndInit();
-        });
+        const [reviews, interactions] = await Promise.all([
+            api.getReviews(),
+            api.getInteractions()
+        ]);
+        globalReviewsState = reviews || [];
+        globalInteractionsState = interactions || {};
 
-        const intsRef = collection(db, "interactions");
-        onSnapshot(intsRef, (snapshot) => {
-            const ints = {};
-            snapshot.forEach((docSnap) => {
-                ints[docSnap.id] = docSnap.data();
-            });
-            globalInteractionsState = ints;
-            interactionsReady = true;
-            checkAndInit();
-        }, (err) => {
-            console.error('Interactions snapshot error:', err);
-            interactionsReady = true;
-            checkAndInit();
-        });
-    } catch(e) {
-        console.error('Firebase listener setup error:', e);
-        reviewsReady = true;
-        interactionsReady = true;
-        clearTimeout(fallbackTimer);
-        checkAndInit();
+        if (currentRoute === 'university' && activeRenderers.university) activeRenderers.university();
+        if (currentRoute === 'profile' && activeRenderers.profile) activeRenderers.profile();
+        if (currentRoute === 'compare' && activeRenderers.compare) activeRenderers.compare();
+    } catch (e) {
+        console.warn("Veri yüklenirken hata oluştu:", e);
     }
 }
 
-
-function getSavedReviews() { return globalReviewsState; }
+function getSavedReviews() {
+    return globalReviewsState;
+}
 
 window.saveReview = async function(review) {
-    if (!review.id) {
-        review.timestamp = Date.now();
-        await addDoc(collection(db, "reviews"), review);
-    } else {
-        const ref = doc(db, "reviews", String(review.id));
-        await updateDoc(ref, review);
-    }
-}
+    const created = await api.createReview(review);
+    globalReviewsState.unshift(created);
+    if (currentRoute === 'university' && activeRenderers.university) activeRenderers.university();
+    if (currentRoute === 'compare' && activeRenderers.compare) activeRenderers.compare();
+    return created;
+};
 
 window.removeSavedReview = async function(id) {
-    await deleteDoc(doc(db, "reviews", String(id)));
-}
+    await api.deleteReview(id);
+    globalReviewsState = globalReviewsState.filter(r => String(r.id) !== String(id));
+};
 
-// ─── Interaction Helpers (Likes/Dislikes) ─
-
-/** Get current interactions */
 function getInteractions() {
     return globalInteractionsState;
 }
 
-/** Save interactions to LocalStorage */
-function saveInteractions(data) {
-    globalInteractionsState = data;
-    localStorage.setItem('unireview_interactions', JSON.stringify(globalInteractionsState));
-}
-
-/** Get score for a review id */
 function getReviewScore(id) {
     const ints = getInteractions()[id] || { likes: [], dislikes: [] };
     return ints.likes.length - ints.dislikes.length;
@@ -283,61 +209,36 @@ function getReviewScore(id) {
 
 window.toggleLike = async function (id) {
     if (CURRENT_USER.uid === 'guest') {
-        window.location.href = 'login.html';
+        showToast('⚠️ Beğenmek için lütfen giriş yapın.');
+        navigateTo('login');
         return;
     }
-    const userIdentifier = CURRENT_USER.name;
-    const ref = doc(db, "interactions", String(id));
-    
-    const ints = getInteractions();
-    const currentInt = ints[String(id)] || { likes: [], dislikes: [] };
-    const isLiked = currentInt.likes.includes(userIdentifier);
-
     try {
-        if (!ints[String(id)]) {
-            await setDoc(ref, { likes: isLiked ? [] : [userIdentifier], dislikes: [] });
-        } else {
-            if (isLiked) {
-                await updateDoc(ref, { likes: arrayRemove(userIdentifier) });
-            } else {
-                await updateDoc(ref, { 
-                    likes: arrayUnion(userIdentifier),
-                    dislikes: arrayRemove(userIdentifier)
-                });
-            }
-        }
-    } catch(e) { console.error(e); }
+        const res = await api.toggleLike(id);
+        globalInteractionsState[String(id)] = res;
+        updateInteractionUI(id, res);
+    } catch(e) {
+        console.error(e);
+        showToast('❌ İşlem başarısız.');
+    }
 };
 
 window.toggleDislike = async function (id) {
     if (CURRENT_USER.uid === 'guest') {
-        window.location.href = 'login.html';
+        showToast('⚠️ Oy vermek için lütfen giriş yapın.');
+        navigateTo('login');
         return;
     }
-    const userIdentifier = CURRENT_USER.name;
-    const ref = doc(db, "interactions", String(id));
-    
-    const ints = getInteractions();
-    const currentInt = ints[String(id)] || { likes: [], dislikes: [] };
-    const isDisliked = currentInt.dislikes.includes(userIdentifier);
-
     try {
-        if (!ints[String(id)]) {
-            await setDoc(ref, { likes: [], dislikes: isDisliked ? [] : [userIdentifier] });
-        } else {
-            if (isDisliked) {
-                await updateDoc(ref, { dislikes: arrayRemove(userIdentifier) });
-            } else {
-                await updateDoc(ref, { 
-                    dislikes: arrayUnion(userIdentifier),
-                    likes: arrayRemove(userIdentifier)
-                });
-            }
-        }
-    } catch(e) { console.error(e); }
+        const res = await api.toggleDislike(id);
+        globalInteractionsState[String(id)] = res;
+        updateInteractionUI(id, res);
+    } catch(e) {
+        console.error(e);
+        showToast('❌ İşlem başarısız.');
+    }
 };
 
-// Optimistic UI Update Helper
 function updateInteractionUI(id, data) {
     const card = document.querySelector(`.card[data-id="${id}"]`);
     if (!card) return;
@@ -359,7 +260,6 @@ function updateInteractionUI(id, data) {
     }
 }
 
-// Event Delegation for Interactions
 document.addEventListener('click', (e) => {
     const likeBtn = e.target.closest('.btn-interaction-like');
     if (likeBtn) {
@@ -375,14 +275,21 @@ document.addEventListener('click', (e) => {
 });
 
 // ─── Utility Functions ───────────────────
+const AVAILABLE_TAGS = [
+    { id: 'kampus', label: '🏫 Kampüs', icon: '🏫' },
+    { id: 'yemekhane', label: '🍽️ Yemekhane', icon: '🍽️' },
+    { id: 'egitim', label: '📚 Eğitim', icon: '📚' },
+    { id: 'kutuphane', label: '📖 Kütüphane', icon: '📖' },
+    { id: 'sosyal', label: '🎉 Sosyal Hayat', icon: '🎉' },
+    { id: 'ulasim', label: '🚌 Ulaşım', icon: '🚌' },
+    { id: 'yurt', label: '🏠 Yurt Olanakları', icon: '🏠' },
+];
 
-/** Get tag label from id */
 function getTagLabel(tagId) {
     const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
     return tag ? tag.label : tagId;
 }
 
-/** Render star rating HTML */
 function renderStars(rating, interactive = false) {
     let html = `<div class="stars${interactive ? ' stars--interactive' : ''}">`;
     for (let i = 1; i <= 5; i++) {
@@ -392,15 +299,16 @@ function renderStars(rating, interactive = false) {
     return html;
 }
 
-/** Render tag pills HTML */
 function renderTags(tagIds) {
+    if (!tagIds) return '';
     return tagIds.map(id => `<span class="tag">${getTagLabel(id)}</span>`).join('');
 }
 
 window.submitReply = async function (e, reviewId) {
     e.preventDefault();
     if (CURRENT_USER.uid === 'guest') {
-        window.location.href = 'login.html';
+        showToast('⚠️ Yanıt yazmak için lütfen giriş yapın.');
+        navigateTo('login');
         return;
     }
     const form = e.target;
@@ -408,29 +316,23 @@ window.submitReply = async function (e, reviewId) {
     const text = input.value.trim();
     if (!text) return;
 
-    // Find the review by id globally
-    const review = globalReviewsState.find(r => String(r.id) === String(reviewId));
-
-    if (review) {
-        const newReply = {
-            user: CURRENT_USER.name,
-            date: new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }),
-            text: text
-        };
-
-        try {
-            const ref = doc(db, "reviews", String(reviewId));
-            await updateDoc(ref, {
-                replies: arrayUnion(newReply)
-            });
-            showToast('✅ Yanıt eklendi!');
-            form.reset();
-        } catch(err) {
-            console.error(err);
-            showToast('❌ Yanıt eklenemedi!');
+    try {
+        const newReply = await api.addReply(reviewId, text);
+        const review = globalReviewsState.find(r => String(r.id) === String(reviewId));
+        if (review) {
+            if (!review.replies) review.replies = [];
+            review.replies.push(newReply);
         }
+        showToast('✅ Yanıt eklendi!');
+        form.reset();
+
+        if (currentRoute === 'university' && activeRenderers.university) activeRenderers.university();
+        if (currentRoute === 'profile' && activeRenderers.profile) activeRenderers.profile();
+    } catch(err) {
+        console.error(err);
+        showToast('❌ Yanıt eklenemedi!');
     }
-}
+};
 
 /** Render a single review card */
 function renderReviewCard(review, options = {}) {
@@ -464,12 +366,12 @@ function renderReviewCard(review, options = {}) {
             <input type="text" class="form__input form__input--sm" placeholder="Yanıt yaz..." required>
             <button type="submit" class="btn btn--primary btn--sm">Gönder</button>
         </form>
-    ` : `<div style="font-size:0.8rem; color: var(--color-text-muted); padding-top: 5px;">Yanıt yazmak için <a href="login.html">giriş yapın</a>.</div>`;
+    ` : `<div style="font-size:0.8rem; color: var(--color-text-muted); padding-top: 5px;">Yanıt yazmak için <a href="#/login">giriş yapın</a>.</div>`;
 
     return `
     <article class="card" data-id="${review.id}" data-tags="${review.tags.join(',')}">
       <div class="card__header">
-        <a href="profile.html?user=${encodeURIComponent(review.user)}" class="card__user card__user--clickable">
+        <a href="#/profile?user=${encodeURIComponent(review.user)}" class="card__user card__user--clickable">
           <div class="card__avatar">${review.initials}</div>
           <div>
             <div class="card__username">${review.user}</div>
@@ -519,28 +421,17 @@ function showToast(message) {
 
 // ─── Navigation ───────────────────────────
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Hamburger toggle
+function setupNavEvents() {
     const hamburger = document.querySelector('.nav__hamburger');
     const navLinks = document.querySelector('.nav__links');
 
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('nav__links--open');
-            // animate hamburger lines
             hamburger.classList.toggle('nav__hamburger--active');
         });
     }
-
-    // Mark active nav link
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.nav__link').forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === currentPage) {
-            link.classList.add('nav__link--active');
-        }
-    });
-});
+}
 
 
 // ─── University Meta ──────────────────────
@@ -778,30 +669,35 @@ function initCustomSelect(containerId, optionsList, onSelectCallback, initialVal
     renderOptions();
 }
 
-// ─── University Detail Page (university.html) ──
+// ─── University Detail Page (university) ──
 
-function initUniversityPage() {
+function initUniversityPage(initialUni) {
     const reviewsContainer = document.getElementById('reviews-container');
     const filterBar = document.getElementById('filter-bar');
     const heroTitle = document.getElementById('uni-hero-title');
     const heroSubtitle = document.getElementById('uni-hero-subtitle');
 
-    if (!reviewsContainer) return;
+    if (!reviewsContainer) return () => {};
 
     // All reviews pool (no local mock data - all from Firebase)
     const ALL_MOCK = [];
 
-    // Default to the first one available or Boğaziçi
-    let selectedUni = typeof TURKISH_UNIVERSITIES !== 'undefined' ?
-        'Boğaziçi Üniversitesi' : 'Boğaziçi Üniversitesi';
+    // Default to initialUni or selectedUniState or Boğaziçi
+    let selectedUni = initialUni || selectedUniState || (typeof TURKISH_UNIVERSITIES !== 'undefined' ?
+        'Boğaziçi Üniversitesi' : 'Boğaziçi Üniversitesi');
+    selectedUniState = selectedUni;
 
     // Initialize custom select
     initCustomSelect('custom-uni-select', typeof TURKISH_UNIVERSITIES !== 'undefined' ? TURKISH_UNIVERSITIES : [], (newUni) => {
         selectedUni = newUni;
+        selectedUniState = newUni;
         updateHero();
         // Reset tag filter
-        filterBar.querySelectorAll('.tag--filter').forEach(b => b.classList.remove('tag--active'));
-        filterBar.querySelector('[data-filter="all"]').classList.add('tag--active');
+        if (filterBar) {
+            filterBar.querySelectorAll('.tag--filter').forEach(b => b.classList.remove('tag--active'));
+            const allBtn = filterBar.querySelector('[data-filter="all"]');
+            if (allBtn) allBtn.classList.add('tag--active');
+        }
         renderReviews('all');
     }, selectedUni);
 
@@ -1244,134 +1140,174 @@ function initReviewForm() {
             text: text,
         };
 
-        // Save to Firebase Database
-        window.saveReview(newReview);
+        // Save to Database
+        window.saveReview(newReview).then(saved => {
+            // Show preview
+            previewContainer.innerHTML = `
+              <h3 class="section-title" style="margin-top: var(--space-xl);">✅ Değerlendirmeniz <span>gönderildi!</span></h3>
+              ${renderReviewCard(saved || newReview, { showUni: true })}
+            `;
+            previewContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-        // Show preview
-        previewContainer.innerHTML = `
-      <h3 class="section-title" style="margin-top: var(--space-xl);">✅ Değerlendirmeniz <span>gönderildi!</span></h3>
-      ${renderReviewCard(newReview, { showUni: true })}
-    `;
-        previewContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Reset form
+            form.reset();
+            selectedTags.clear();
+            document.querySelectorAll('.tag--selected').forEach(t => t.classList.remove('tag--selected'));
+            selectedRating = 0;
+            updateStarDisplay();
+            charCount.textContent = '0 / 500';
 
-        // Reset form
-        form.reset();
-        selectedTags.clear();
-        document.querySelectorAll('.tag--selected').forEach(t => t.classList.remove('tag--selected'));
-        selectedRating = 0;
-        updateStarDisplay();
-        charCount.textContent = '0 / 500';
-
-        showToast('✅ Değerlendirme başarıyla gönderildi!');
+            showToast('✅ Değerlendirme başarıyla gönderildi!');
+        }).catch(err => {
+            console.error(err);
+            showToast(`❌ Hata: ${err.message}`);
+        });
     });
 }
 
 
 // ─── Profile Page ─────────────────────────
 
-function initProfilePage() {
+function initProfilePage(params) {
     const listContainer = document.getElementById('user-reviews-list');
-    const countEl = document.getElementById('review-count');
-    if (!listContainer) return;
+    if (!listContainer) return () => {};
 
-    // Check URL for user parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetUser = urlParams.get('user') || CURRENT_USER.name;
-    const isCurrentUser = targetUser === CURRENT_USER.name;
+    const targetUser = params.get('user') || CURRENT_USER.name;
+    const isCurrentUser = !params.get('user') || targetUser === CURRENT_USER.name;
+    const settingsTab = document.getElementById('profile-settings-tab');
+    const settingsPanel = document.getElementById('profile-settings-panel');
+    const logoutButton = document.getElementById('profile-logout-btn');
+    const settingsForm = document.getElementById('profile-settings-form');
+    const settingsMessage = document.getElementById('profile-settings-message');
+    let profile = null;
+    let reviews = isCurrentUser ? [] : getAllReviewsGlobal().filter(review => review.user === targetUser);
 
-    function getTargetReviews() {
-        if (isCurrentUser) {
-            const saved = getSavedReviews();
-            return saved.filter(r => r.user === CURRENT_USER.name);
-        } else {
-            return getAllReviewsGlobal().filter(r => r.user === targetUser);
-        }
+    if (!isCurrentUser) {
+        settingsTab.hidden = true;
+        settingsPanel.hidden = true;
+        logoutButton.hidden = true;
     }
 
-    let reviews = getTargetReviews();
+    function setActiveTab(tabName) {
+        document.querySelectorAll('[data-profile-tab]').forEach(tab => {
+            const selected = tab.dataset.profileTab === tabName;
+            tab.classList.toggle('is-active', selected);
+            tab.setAttribute('aria-selected', String(selected));
+        });
+        document.getElementById('profile-reviews-panel').hidden = tabName !== 'reviews';
+        settingsPanel.hidden = tabName !== 'settings' || !isCurrentUser;
+    }
+
+    document.querySelectorAll('[data-profile-tab]').forEach(tab => {
+        tab.addEventListener('click', () => setActiveTab(tab.dataset.profileTab));
+    });
 
     function render() {
-        if (countEl) countEl.textContent = reviews.length;
+        const targetReviews = reviews;
+        const reviewLikeCount = targetReviews.reduce((sum, review) => {
+            const interactions = getInteractions()[review.id] || { likes: [], dislikes: [] };
+            return sum + interactions.likes.length;
+        }, 0);
+        const displayName = profile?.name || targetReviews[0]?.user || targetUser;
+        const displayInitials = profile?.initials || targetReviews[0]?.initials || getInitials(displayName);
+        const academicInfo = [profile?.university, profile?.department].filter(Boolean).join(' · ');
 
-        // Determine user info
-        let displayInitials = '??';
-        let displayName = targetUser;
-        if (reviews.length > 0) {
-            displayInitials = reviews[0].initials;
-        } else if (isCurrentUser) {
-            displayInitials = CURRENT_USER.initials;
+        document.getElementById('profile-avatar').textContent = displayInitials;
+        document.getElementById('profile-name').textContent = displayName;
+        document.getElementById('profile-academic-info').textContent = academicInfo || 'Üniversite ve bölüm bilgisi eklenmemiş.';
+        document.getElementById('stat-review-count').textContent = profile?.stats?.review_count ?? targetReviews.length;
+        document.getElementById('stat-upvotes').textContent = profile?.stats?.upvote_count ?? reviewLikeCount;
+
+        if (isCurrentUser && profile) {
+            document.getElementById('settings-name').value = profile.name || '';
+            document.getElementById('settings-university').value = profile.university || '';
+            document.getElementById('settings-department').value = profile.department || '';
         }
 
-        // Calculate statistics
-        let totalLikes = 0;
-        let totalDislikes = 0;
-        reviews.forEach(r => {
-            const ints = getInteractions()[r.id] || { likes: [], dislikes: [] };
-            totalLikes += ints.likes.length;
-            totalDislikes += ints.dislikes.length;
-        });
-        const totalInteractions = totalLikes + totalDislikes;
-        const approvalRating = totalInteractions > 0 ? Math.round((totalLikes / totalInteractions) * 100) : 0;
-
-        // Update profile header info
-        const profileAvatar = document.querySelector('.profile-header__avatar');
-        const profileName = document.querySelector('.profile-header__info h2');
-        const statLikes = document.getElementById('stat-likes');
-        const statDislikes = document.getElementById('stat-dislikes');
-        const statApproval = document.getElementById('stat-approval');
-
-        if (profileAvatar) profileAvatar.textContent = displayInitials;
-        if (profileName) profileName.textContent = displayName;
-        if (statLikes) statLikes.textContent = totalLikes;
-        if (statDislikes) statDislikes.textContent = totalDislikes;
-
-        if (statApproval) {
-            if (totalInteractions > 0) {
-                statApproval.textContent = `%${approvalRating}`;
-            } else {
-                statApproval.textContent = '—';
-            }
-        }
-
-        const sectionTitle = document.querySelector('.section-title');
-        if (sectionTitle) {
-            sectionTitle.innerHTML = isCurrentUser ? '📖 Değerlendirmelerim' : `📖 ${displayName} Değerlendirmeleri`;
-        }
-
-        if (reviews.length === 0) {
+        if (targetReviews.length === 0) {
             listContainer.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state__icon">📝</div>
-          <p>${isCurrentUser ? 'Henüz bir değerlendirmeniz yok.' : 'Bu kullanıcının henüz bir değerlendirmesi yok.'}</p>
-        </div>
-      `;
+                <div class="empty-state">
+                    <div class="empty-state__icon">📝</div>
+                    <p>${isCurrentUser ? 'Henüz bir değerlendirmeniz yok.' : 'Bu kullanıcının henüz bir değerlendirmesi yok.'}</p>
+                </div>
+            `;
             return;
         }
 
-        listContainer.innerHTML = reviews
-            .map(r => renderReviewCard(r, { showUni: true, showDelete: isCurrentUser }))
+        listContainer.innerHTML = targetReviews
+            .map(review => renderReviewCard(review, { showUni: true, showDelete: isCurrentUser }))
             .join('');
     }
 
-    render();
-
-    // Global delete handler
-    window.deleteReview = function (id) {
-        if (!isCurrentUser) return;
-        reviews = reviews.filter(r => r.id !== id);
-        window.removeSavedReview(id);
+    if (isCurrentUser) {
+        listContainer.innerHTML = '<p class="profile-loading">Değerlendirmeler yükleniyor...</p>';
+        Promise.all([api.getMyProfile(), api.getMyReviews()])
+            .then(([userProfile, userReviews]) => {
+                profile = userProfile;
+                reviews = userReviews || [];
+                render();
+            })
+            .catch(error => {
+                listContainer.innerHTML = `<p class="profile-loading profile-loading--error">${error.message}</p>`;
+            });
+    } else {
         render();
-        showToast('🗑️ Değerlendirme silindi.');
-    };
-
-    if (!authStateResolved) {
-        window.addEventListener('auth-ready', () => {
-            reviews = getTargetReviews();
-            render();
-        }, { once: true });
     }
 
-    // Return render so Firebase updates can refresh without full re-init
+    window.deleteReview = async function (id) {
+        if (!isCurrentUser) return;
+        try {
+            await window.removeSavedReview(id);
+            reviews = reviews.filter(review => String(review.id) !== String(id));
+            profile = await api.getMyProfile();
+            render();
+            showToast('Değerlendirme silindi.');
+        } catch (error) {
+            showToast(`Silme başarısız: ${error.message}`);
+        }
+    };
+
+    if (settingsForm && isCurrentUser) {
+        settingsForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            settingsMessage.textContent = '';
+
+            const formData = new FormData(settingsForm);
+            const update = {
+                name: formData.get('name').trim(),
+                university: formData.get('university').trim(),
+                department: formData.get('department').trim()
+            };
+            const newPassword = formData.get('new_password');
+            if (newPassword) {
+                update.current_password = formData.get('current_password');
+                update.new_password = newPassword;
+            }
+
+            const submitButton = settingsForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            try {
+                const updated = await api.updateMyProfile(update);
+                profile = { ...profile, ...updated };
+                CURRENT_USER = {
+                    ...CURRENT_USER,
+                    name: updated.name,
+                    initials: updated.initials,
+                    email: updated.email
+                };
+                updateNavForUser(CURRENT_USER);
+                settingsForm.reset();
+                render();
+                settingsMessage.textContent = 'Profil bilgileri güncellendi.';
+            } catch (error) {
+                settingsMessage.textContent = error.message;
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+    }
+
+    logoutButton?.addEventListener('click', () => window.signOutBackend());
     return render;
 }
 
@@ -1387,7 +1323,8 @@ function initLoginPage() {
 
     // Redirect to home if already logged in natively
     if (CURRENT_USER.uid !== 'guest') {
-        window.location.href = 'index.html';
+        navigateTo('home');
+        return;
     }
 
     // Tab switching
@@ -1431,10 +1368,9 @@ function initLoginPage() {
         btn.disabled = true;
 
         try {
-            await window.signInFirebase(email, pass);
-            // onAuthStateChanged will handle redirect
+            await window.signInBackend(email, pass);
         } catch (error) {
-            errDiv.textContent = 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
+            errDiv.textContent = 'Giriş başarısız: ' + error.message;
             btn.textContent = 'Giriş Yap ✨';
             btn.disabled = false;
         }
@@ -1453,10 +1389,9 @@ function initLoginPage() {
         btn.disabled = true;
 
         try {
-            await window.signUpFirebase(name, email, pass);
-            // onAuthStateChanged will handle redirect
+            await window.signUpBackend(name, email, pass);
         } catch (error) {
-            errDiv.textContent = 'Kayıt başarısız. (' + error.message + ')';
+            errDiv.textContent = 'Kayıt başarısız: ' + error.message;
             btn.textContent = 'Hesap Oluştur 🚀';
             btn.disabled = false;
         }
@@ -1469,13 +1404,13 @@ function initComparePage() {
     const res1 = document.getElementById('compare-result-1');
     const res2 = document.getElementById('compare-result-2');
 
-    if (!res1 || !res2) return;
+    if (!res1 || !res2) return () => {};
 
     let uni1 = 'Boğaziçi Üniversitesi';
     let uni2 = 'Orta Doğu Teknik Üniversitesi (ODTÜ)';
 
     function renderCol(uniName, container) {
-        if (!uniName) return;
+        if (!uniName || !container) return;
         let details = UNI_DETAILS[uniName] ? { ...UNI_DETAILS[uniName] } : { ...GENERIC_UNI_DATA };
 
         if (typeof UNI_IMAGES !== 'undefined' && UNI_IMAGES[uniName] && UNI_IMAGES[uniName] !== null) {
@@ -1535,42 +1470,175 @@ function initComparePage() {
 
     renderCol(uni1, res1);
     renderCol(uni2, res2);
+
+    return () => {
+        renderCol(uni1, res1);
+        renderCol(uni2, res2);
+    };
 }
 
-// ─── Auto-init based on page ──────────────
+// ─── SPA Route Renderer ───────────────────
 
-document.addEventListener('DOMContentLoaded', () => {
-    const page = document.body.dataset.page;
+export function renderCurrentRoute() {
+    const { route, params } = parseHash();
+    currentRoute = route;
+    currentParams = params;
 
-    if (page === 'login') {
-        initLoginPage();
+    // Check protected routes
+    const protectedRoutes = ['review-form'];
+    if (route === 'profile' && !params.get('user')) {
+        protectedRoutes.push('profile');
+    }
+
+    if (protectedRoutes.includes(route) && CURRENT_USER.uid === 'guest') {
+        showToast('⚠️ Bu sayfayı görüntülemek için lütfen giriş yapın.');
+        window.location.hash = '#/login';
         return;
     }
 
-    // onInitCallback: runs ONCE when both Firebase listeners are ready
-    // onRefreshCallback: runs on subsequent real-time updates (lightweight re-render)
-    let renderReviews_ref = null;
-    let renderProfile_ref = null;
-    let renderCompare_ref = null;
+    if (route === 'login' && CURRENT_USER.uid !== 'guest') {
+        window.location.hash = '#/home';
+        return;
+    }
 
-    initFirebaseListeners(
-        // First-time init
-        () => {
-            if (page === 'university') {
-                renderReviews_ref = initUniversityPage();
-            } else if (page === 'review-form') {
-                initReviewForm();
-            } else if (page === 'profile') {
-                renderProfile_ref = initProfilePage();
-            } else if (page === 'compare') {
-                renderCompare_ref = initComparePage();
-            }
-        },
-        // Subsequent real-time refresh (just re-render the cards, no re-init)
-        () => {
-            if (page === 'university' && renderReviews_ref) renderReviews_ref();
-            if (page === 'profile' && renderProfile_ref) renderProfile_ref();
-            if (page === 'compare' && renderCompare_ref) renderCompare_ref();
+    const root = document.getElementById('app-root');
+    if (!root) return;
+
+    // Page templates mapping
+    const templateMap = {
+        'home': TEMPLATES.home,
+        'university': TEMPLATES.university,
+        'compare': TEMPLATES.compare,
+        'review-form': TEMPLATES.reviewForm,
+        'profile': TEMPLATES.profile,
+        'login': TEMPLATES.login
+    };
+
+    const template = templateMap[route] || TEMPLATES.home;
+    root.innerHTML = template;
+
+    // Update Nav active classes
+    document.querySelectorAll('.nav__link').forEach(link => {
+        const nav = link.dataset.nav;
+        if (nav) {
+            link.classList.toggle('nav__link--active', nav === route);
         }
-    );
+    });
+
+    // Close mobile hamburger menu
+    const navLinks = document.querySelector('.nav__links');
+    const hamburger = document.querySelector('.nav__hamburger');
+    if (navLinks) navLinks.classList.remove('nav__links--open');
+    if (hamburger) hamburger.classList.remove('nav__hamburger--active');
+
+    // Update document title
+    const titles = {
+        'home': 'UniReview — Üniversite Değerlendirme Platformu',
+        'university': 'Üniversite Detay — UniReview',
+        'compare': 'Karşılaştır — UniReview',
+        'review-form': 'Değerlendir — UniReview',
+        'profile': 'Profilim — UniReview',
+        'login': 'Giriş Yap — UniReview'
+    };
+    document.title = titles[route] || 'UniReview';
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
+    // Initialize Route-Specific Logic
+    if (route === 'university') {
+        const initialUni = params.get('name') || selectedUniState || 'Boğaziçi Üniversitesi';
+        activeRenderers.university = initUniversityPage(initialUni);
+    } else if (route === 'compare') {
+        activeRenderers.compare = initComparePage();
+    } else if (route === 'review-form') {
+        initReviewForm();
+    } else if (route === 'profile') {
+        activeRenderers.profile = initProfilePage(params);
+    } else if (route === 'login') {
+        initLoginPage();
+    }
+}
+
+// ─── Click Interceptor for Seamless SPA Navigation ───
+
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    // Ignore external or new tab
+    if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') || link.target === '_blank') {
+        return;
+    }
+
+    let target = null;
+    let query = '';
+
+    if (href === 'index.html' || href === './' || href === '/' || href === '#' || href.startsWith('#/home')) {
+        target = 'home';
+    } else if (href.startsWith('university.html') || href.startsWith('#/university')) {
+        target = 'university';
+        if (href.includes('?')) query = href.substring(href.indexOf('?') + 1);
+    } else if (href.startsWith('compare.html') || href.startsWith('#/compare')) {
+        target = 'compare';
+    } else if (href.startsWith('review-form.html') || href.startsWith('#/review-form')) {
+        target = 'review-form';
+    } else if (href.startsWith('profile.html') || href.startsWith('#/profile')) {
+        target = 'profile';
+        if (href.includes('?')) query = href.substring(href.indexOf('?') + 1);
+    } else if (href.startsWith('login.html') || href.startsWith('#/login')) {
+        target = 'login';
+    }
+
+    if (target) {
+        e.preventDefault();
+        const hash = `#/${target}${query ? '?' + query : ''}`;
+        if (window.location.hash === hash) {
+            renderCurrentRoute();
+        } else {
+            window.location.hash = hash;
+        }
+    }
+});
+
+// ─── App Lifecycle ────────────────────────
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Setup Hamburger
+    setupNavEvents();
+
+    // 2. Restore User Session if Token Exists
+    try {
+        const me = await api.getMe();
+        if (me) {
+            CURRENT_USER = {
+                uid: me.id,
+                name: me.name,
+                initials: me.initials || getInitials(me.name),
+                email: me.email
+            };
+            updateNavForUser(CURRENT_USER);
+        } else {
+            updateNavForUser(null);
+        }
+    } catch (e) {
+        updateNavForUser(null);
+    }
+
+    // 3. Render initial route immediately from JS templates
+    renderCurrentRoute();
+
+    // 4. Fetch Reviews and Interactions from FastAPI SQLite Database
+    await refreshAppData();
+});
+
+window.addEventListener('hashchange', () => {
+    renderCurrentRoute();
 });
