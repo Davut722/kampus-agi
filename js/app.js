@@ -1562,6 +1562,28 @@ export function renderCurrentRoute() {
         activeRenderers.profile = initProfilePage(params);
     } else if (route === 'login') {
         initLoginPage();
+    } else if (route === 'home') {
+        initHomePage();
+    }
+}
+
+function initHomePage() {
+    // Wire university pill buttons
+    document.querySelectorAll('[data-university]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const uniName = btn.dataset.university;
+            if (uniName) {
+                selectedUniState = uniName;
+                navigateTo('university', { name: uniName });
+            }
+        });
+    });
+
+    // Update live review count
+    const statReviews = document.getElementById('stat-reviews');
+    if (statReviews) {
+        const count = getSavedReviews().length;
+        statReviews.textContent = count > 0 ? count + '+' : '—';
     }
 }
 

@@ -4,35 +4,99 @@
 
 export const TEMPLATES = {
     home: `
-        <main class="container landing page-view">
-            <div class="landing__header" style="text-align: center; margin-top: 80px; margin-bottom: 50px;">
-                <h1 class="landing__title" style="font-size: 3rem; margin-bottom: 20px;">Hoş Geldiniz 👋</h1>
-                <p class="landing__subtitle" style="color: var(--color-text-muted); font-size: 1.2rem;">Üniversitenizi
-                    değerlendirin, karşılaştırın veya diğer öğrencilerin yorumlarını keşfedin.</p>
-                <a href="#/university" class="btn btn--primary"
-                    style="margin-top: 30px; display: inline-block; padding: 15px 30px; font-size: 1.1rem;">Hemen Keşfet</a>
+        <main class="home page-view">
+
+            <!-- Animated background orbs -->
+            <div class="home-bg" aria-hidden="true">
+                <div class="home-bg__orb home-bg__orb--1"></div>
+                <div class="home-bg__orb home-bg__orb--2"></div>
+                <div class="home-bg__orb home-bg__orb--3"></div>
+                <div class="home-bg__orb home-bg__orb--4"></div>
+                <div class="home-bg__noise"></div>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; text-align: center; margin-top: 40px;">
-                <a href="#/university" style="text-decoration: none; color: inherit;">
-                    <div style="padding: 30px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; transition: transform 0.3s ease, border-color 0.3s ease; cursor: pointer;">
-                        <h3 style="margin-bottom: 10px;">🔍 Keşfet</h3>
-                        <p style="color: var(--color-text-muted);">Binlerce öğrenci yorumunu incele.</p>
+            <!-- Hero -->
+            <section class="home-hero container">
+                <div class="home-hero__left">
+                    <p class="home-eyebrow">🎓 Türkiye'nin üniversite rehberi</p>
+                    <h1 class="home-hero__title">
+                        Üniversiteyi<br>
+                        <span class="home-hero__title-em">içeriden</span> tanı.
+                    </h1>
+                    <p class="home-hero__desc">
+                        Broşürlerde yazanı değil, orada okuyanların gerçekten yaşadığını öğren.
+                        Tercih yapmadan önce, gerçek öğrenci seslerine kulak ver.
+                    </p>
+                    <div class="home-hero__actions">
+                        <a href="#/university" class="btn btn--primary home-hero__btn">Üniversiteleri Keşfet</a>
+                        <a href="#/review-form" class="home-hero__link">Yorumunu ekle <span>→</span></a>
                     </div>
-                </a>
-                <a href="#/compare" style="text-decoration: none; color: inherit;">
-                    <div style="padding: 30px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; transition: transform 0.3s ease, border-color 0.3s ease; cursor: pointer;">
-                        <h3 style="margin-bottom: 10px;">⚖️ Karşılaştır</h3>
-                        <p style="color: var(--color-text-muted);">İki üniversiteyi yan yana kıyasla.</p>
+                </div>
+
+                <div class="home-hero__right">
+                    <div class="home-stat-card">
+                        <div class="home-stat-card__row">
+                            <div class="home-stat-card__item">
+                                <span class="home-stat-card__val" id="stat-unis">80+</span>
+                                <span class="home-stat-card__lbl">Üniversite</span>
+                            </div>
+                            <div class="home-stat-card__sep"></div>
+                            <div class="home-stat-card__item">
+                                <span class="home-stat-card__val home-stat-card__val--warm" id="stat-reviews">—</span>
+                                <span class="home-stat-card__lbl">Değerlendirme</span>
+                            </div>
+                        </div>
+                        <div class="home-stat-card__quote">
+                            "Kampüs hayatı, gerçek öğrencilerin gözünden."
+                        </div>
                     </div>
-                </a>
-                <a href="#/review-form" style="text-decoration: none; color: inherit;">
-                    <div style="padding: 30px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; transition: transform 0.3s ease, border-color 0.3s ease; cursor: pointer;">
-                        <h3 style="margin-bottom: 10px;">💬 Değerlendir</h3>
-                        <p style="color: var(--color-text-muted);">Kendi üniversiten hakkındaki düşüncelerini paylaş.</p>
+                </div>
+            </section>
+
+            <!-- Feature Bento -->
+            <section class="home-bento container">
+                <a href="#/university" class="home-bento__card home-bento__card--wide">
+                    <div class="home-bento__icon">🔍</div>
+                    <div class="home-bento__body">
+                        <h3 class="home-bento__title">Üniversiteleri Keşfet</h3>
+                        <p class="home-bento__desc">Türkiye genelindeki yüzlerce üniversiteyi ara, filtrele ve karşılaştır. Her kampüs için gerçek öğrenci yorumları.</p>
                     </div>
+                    <span class="home-bento__arrow">↗</span>
                 </a>
-            </div>
+
+                <a href="#/compare" class="home-bento__card">
+                    <div class="home-bento__icon">⚖️</div>
+                    <div class="home-bento__body">
+                        <h3 class="home-bento__title">Karşılaştır</h3>
+                        <p class="home-bento__desc">İki üniversiteyi yan yana koy. Puan, yorum ve olanakları birlikte değerlendir.</p>
+                    </div>
+                    <span class="home-bento__arrow">↗</span>
+                </a>
+
+                <a href="#/review-form" class="home-bento__card home-bento__card--accent">
+                    <div class="home-bento__icon">✍️</div>
+                    <div class="home-bento__body">
+                        <h3 class="home-bento__title">Yorum Yaz</h3>
+                        <p class="home-bento__desc">Üniversiteni değerlendir, topluluğa katkı sağla.</p>
+                    </div>
+                    <span class="home-bento__arrow">↗</span>
+                </a>
+            </section>
+
+            <!-- Popular Universities strip -->
+            <section class="home-unis container">
+                <p class="home-unis__label">Çok incelenenler</p>
+                <div class="home-unis__strip">
+                    <button class="home-uni-pill" type="button" data-university="Boğaziçi Üniversitesi">Boğaziçi</button>
+                    <button class="home-uni-pill" type="button" data-university="Orta Doğu Teknik Üniversitesi (ODTÜ)">ODTÜ</button>
+                    <button class="home-uni-pill" type="button" data-university="İstanbul Teknik Üniversitesi">İTÜ</button>
+                    <button class="home-uni-pill" type="button" data-university="Hacettepe Üniversitesi">Hacettepe</button>
+                    <button class="home-uni-pill" type="button" data-university="Ege Üniversitesi">Ege</button>
+                    <button class="home-uni-pill" type="button" data-university="Bilkent Üniversitesi">Bilkent</button>
+                    <button class="home-uni-pill" type="button" data-university="Koç Üniversitesi">Koç</button>
+                </div>
+            </section>
+
         </main>
     `,
 
