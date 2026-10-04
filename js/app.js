@@ -780,48 +780,17 @@ function initUniversityPage(initialUni) {
         // Fetch specific or fallback data
         let details = UNI_DETAILS[selectedUni] ? { ...UNI_DETAILS[selectedUni] } : { ...GENERIC_UNI_DATA };
 
-        // Inject dynamic Wikipedia image if available
-        if (typeof UNI_IMAGES !== 'undefined' && UNI_IMAGES[selectedUni] && UNI_IMAGES[selectedUni] !== null) {
-            // Only overwrite if it's not a locally downloaded image
-            if (!details.image || details.image.includes('placeholder.jpg') || details.image.includes('images.unsplash.com')) {
-                details.image = UNI_IMAGES[selectedUni];
-            }
-        }
-
-        // Live fetch fallback if static map is missing it
-        if ((!details.image || details.image.includes('placeholder.jpg') || details.image.includes('images.unsplash.com'))) {
-            if (!window.FETCHED_IMAGES) window.FETCHED_IMAGES = {};
-            if (window.FETCHED_IMAGES[selectedUni]) {
-                details.image = window.FETCHED_IMAGES[selectedUni];
-            } else {
-                fetchWikipediaImage(selectedUni).then(url => {
-                    const currentTitle = document.getElementById('uni-hero-title');
-                    if(url && currentTitle && currentTitle.textContent === selectedUni) {
-                        window.FETCHED_IMAGES[selectedUni] = url;
-                        const heroImg = document.getElementById('hero-img');
-                        const heroBlurImg = document.getElementById('hero-blur-img');
-                        if(heroImg) heroImg.src = url;
-                        if(heroBlurImg) heroBlurImg.src = url;
-                    }
-                });
-            }
-        }
-
         // 1. Update Title and Location
         const heroTitleEl = document.getElementById('uni-hero-title');
         const heroSubtitleEl = document.getElementById('uni-hero-subtitle');
         if (heroTitleEl) heroTitleEl.innerHTML = selectedUni;
         if (heroSubtitleEl) heroSubtitleEl.innerHTML = `<i data-lucide="map-pin" class="icon-sm"></i> ${details.subtitle}`;
 
-        // 2. Update Image
+        // 2. Default Image Settings
         const heroImg = document.getElementById('hero-img');
         const heroBlurImg = document.getElementById('hero-blur-img');
-        if (heroImg) {
-            heroImg.src = details.image;
-        }
-        if (heroBlurImg) {
-            heroBlurImg.src = details.image;
-        }
+        if (heroImg) heroImg.src = details.image;
+        if (heroBlurImg) heroBlurImg.src = details.image;
 
         // 3. Update Text Content
         const textShort = document.getElementById('about-text-short');
@@ -833,25 +802,57 @@ function initUniversityPage(initialUni) {
             textLong.textContent = details.aboutLong;
         }
 
-        // 3.5 Update Official Website Button
+        // 3.5 Default Website
         const websiteBtn = document.getElementById('uni-website-btn');
         if (websiteBtn) {
-            let websiteUrl = null;
-            if (typeof UNI_WEBSITES !== 'undefined' && UNI_WEBSITES[selectedUni]) {
-                websiteUrl = UNI_WEBSITES[selectedUni];
-            } else if (details.website) {
-                websiteUrl = details.website;
-            }
-
-            if (websiteUrl) {
-                websiteBtn.href = websiteUrl;
+            if (details.website) {
+                websiteBtn.href = details.website;
                 websiteBtn.style.display = 'inline-flex';
             } else {
                 websiteBtn.style.display = 'none';
             }
         }
 
-        // 4. Update Transportation Cards based on structured array
+        // 4. Fetch dynamic data from API (MySQL)
+        api.getUniversity(selectedUni).then(uniDb => {
+            if (uniDb) {
+                const currentTitle = document.getElementById('uni-hero-title');
+                // Sadece hala ayni universite seciliyse DOM'u guncelle
+                if (currentTitle && currentTitle.textContent === selectedUni) {
+                    if (uniDb.image_url && uniDb.image_url.trim() !== '') {
+                        if (heroImg) heroImg.src = uniDb.image_url;
+                        if (heroBlurImg) heroBlurImg.src = uniDb.image_url;
+                    } else {
+                        // API'de yoksa Wikipedia fallback (eskisi gibi)
+                        fetchWikipediaImage(selectedUni).then(url => {
+                            if (url && currentTitle && currentTitle.textContent === selectedUni) {
+                                if (heroImg) heroImg.src = url;
+                                if (heroBlurImg) heroBlurImg.src = url;
+                            }
+                        });
+                    }
+
+                    if (uniDb.website_url && uniDb.website_url.trim() !== '') {
+                        if (websiteBtn) {
+                            websiteBtn.href = uniDb.website_url;
+                            websiteBtn.style.display = 'inline-flex';
+                        }
+                    }
+                }
+            }
+        }).catch(err => {
+            console.warn("DB'den universite bilgisi cekilirken hata:", err);
+            // Fallback wikipedia
+            fetchWikipediaImage(selectedUni).then(url => {
+                const currentTitle = document.getElementById('uni-hero-title');
+                if (url && currentTitle && currentTitle.textContent === selectedUni) {
+                    if (heroImg) heroImg.src = url;
+                    if (heroBlurImg) heroBlurImg.src = url;
+                }
+            });
+        });
+
+        // 5. Update Transportation Cards based on structured array
         const transportGrid = document.getElementById('transport-grid');
         if (transportGrid) {
             let transportHTML = '';
@@ -1413,11 +1414,22 @@ function initComparePage() {
         if (!uniName || !container) return;
         let details = UNI_DETAILS[uniName] ? { ...UNI_DETAILS[uniName] } : { ...GENERIC_UNI_DATA };
 
-        if (typeof UNI_IMAGES !== 'undefined' && UNI_IMAGES[uniName] && UNI_IMAGES[uniName] !== null) {
-            if (!details.image || details.image.includes('placeholder.jpg') || details.image.includes('images.unsplash.com')) {
-                details.image = UNI_IMAGES[uniName];
+        // Fetch async image from API
+        api.getUniversity(uniName).then(uniDb => {
+            if (uniDb && uniDb.image_url && uniDb.image_url.trim() !== '') {
+                const imgEl = container.querySelector('.compare-img');
+                if (imgEl && imgEl.alt === uniName) {
+                    imgEl.src = uniDb.image_url;
+                }
+            } else {
+                fetchWikipediaImage(uniName).then(url => {
+                    const imgEl = container.querySelector('.compare-img');
+                    if (url && imgEl && imgEl.alt === uniName) {
+                        imgEl.src = url;
+                    }
+                });
             }
-        }
+        }).catch(err => console.warn("API universite resmi çekilirken hata:", err));
 
         // Compute avg rating
         const allReviews = getAllReviewsGlobal().filter(r => r.university === uniName);
