@@ -475,8 +475,8 @@ if __name__ == "__main__":
     import uvicorn
     print("\n" + "="*50)
     print("UniReview Sunucusu Baslatiliyor...")
-    print("Web Sitesi:  http://localhost:4639")
-    print("API Docs:    http://localhost:4639/docs")
+    print("Web Sitesi: http://localhost:8000")
+    print("API Docs: http://localhost:8000/docs")
     print("Veritabani:  MySQL (unireview)")
     print("="*50 + "\n")
-    uvicorn.run("server:app", host="0.0.0.0", port=4639, reload=True)
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
