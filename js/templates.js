@@ -160,6 +160,14 @@ export const TEMPLATES = {
                     <div class="transport-grid" id="transport-grid"></div>
                 </section>
 
+                <section class="profile-section reveal-up" style="animation-delay: 0.15s;">
+                    <h2 class="section-title">🏢 Çevredeki <span>Yurtlar (KYK & Özel)</span></h2>
+                    <p class="section-desc">Bu üniversitenin çevresindeki öğrenci yurtları ve barınma imkanları.</p>
+                    <div id="kyk-grid" class="kyk-grid">
+                        <div style="color: var(--color-text-muted);">Yurt bilgileri yükleniyor...</div>
+                    </div>
+                </section>
+
                 <section class="profile-section hero__stats reveal-up"
                     style="animation-delay: 0.2s; padding: var(--space-lg); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);">
                     <div class="hero__stat">

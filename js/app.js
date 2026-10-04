@@ -838,6 +838,13 @@ function initUniversityPage(initialUni) {
                             websiteBtn.style.display = 'inline-flex';
                         }
                     }
+
+                    // KYK Render
+                    if (uniDb.kyk_info) {
+                        renderKykSection(uniDb.kyk_info);
+                    } else {
+                        renderKykSection([]);
+                    }
                 }
             }
         }).catch(err => {
@@ -850,6 +857,7 @@ function initUniversityPage(initialUni) {
                     if (heroBlurImg) heroBlurImg.src = url;
                 }
             });
+            renderKykSection([]);
         });
 
         // 5. Update Transportation Cards based on structured array
@@ -892,6 +900,48 @@ function initUniversityPage(initialUni) {
 
         const statRank = document.getElementById('stat-rank');
         if (statRank) statRank.textContent = details.rank;
+    }
+
+    // Render KYK Info
+    function renderKykSection(yurtlar) {
+        const grid = document.getElementById('kyk-grid');
+        if (!grid) return;
+
+        if (!yurtlar || yurtlar.length === 0) {
+            grid.innerHTML = '<div style="color: var(--color-text-muted);">Bu üniversite için henüz yurt bilgisi eklenmedi.</div>';
+            return;
+        }
+
+        let html = '';
+        yurtlar.forEach(yurt => {
+            let badgeClass = 'kyk-badge--karma';
+            if (yurt.tip.toLowerCase() === 'kız') badgeClass = 'kyk-badge--kiz';
+            else if (yurt.tip.toLowerCase() === 'erkek') badgeClass = 'kyk-badge--erkek';
+
+            html += `
+                <div class="kyk-card">
+                    <div class="kyk-card__header">
+                        <h3 class="kyk-card__title">${yurt.ad}</h3>
+                        <span class="kyk-badge ${badgeClass}">${yurt.tip}</span>
+                    </div>
+                    <div class="kyk-detail">
+                        <i data-lucide="map-pin" class="icon-sm"></i>
+                        <span>${yurt.mesafe}</span>
+                    </div>
+                    <div class="kyk-detail">
+                        <i data-lucide="wallet" class="icon-sm"></i>
+                        <span>${yurt.ucret}</span>
+                    </div>
+                    <div class="kyk-detail">
+                        <i data-lucide="users" class="icon-sm"></i>
+                        <span>Kapasite: ${yurt.kapasite}</span>
+                    </div>
+                </div>
+            `;
+        });
+        
+        grid.innerHTML = html;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     // Initialize Page-Specific Logic (Animations & Toggles)
