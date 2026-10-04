@@ -471,13 +471,6 @@ def serve_index():
 def serve_index_html():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
-@app.get("/{filename}.html")
-def serve_legacy_pages(filename: str):
-    file_path = os.path.join(BASE_DIR, f"{filename}.html")
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
-    return FileResponse(os.path.join(BASE_DIR, "index.html"))
-
 if __name__ == "__main__":
     import uvicorn
     print("\n" + "="*50)
