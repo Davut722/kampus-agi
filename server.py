@@ -426,6 +426,32 @@ def get_all_interactions(db: Session = Depends(get_db)):
             result[rid]["dislikes"].append(i.user_name)
     return result
 
+# ─── Universities Endpoints ──────────────────────────────
+
+from database import University
+
+@app.get("/api/universities")
+def get_universities(db: Session = Depends(get_db)):
+    """Tüm üniversiteleri image_url, website_url ve kyk_info ile listeler."""
+    records = db.query(University).order_by(University.name).all()
+    return [r.to_dict() for r in records]
+
+@app.get("/api/universities/{uni_name}")
+def get_university(uni_name: str, db: Session = Depends(get_db)):
+    """Spesifik bir üniversitenin detaylarını getirir."""
+    clean = uni_name.strip()
+    record = db.query(University).filter(University.name == clean).first()
+    if not record:
+        base_name = clean.split("(")[0].strip()
+        record = db.query(University).filter(
+            (University.name.ilike(f"%{base_name}%")) |
+            (University.name.ilike(f"%{clean}%"))
+        ).first()
+
+    if not record:
+        raise HTTPException(status_code=404, detail="Üniversite bulunamadı")
+    return record.to_dict()
+
 # ─── Static Frontend Serving ──────────────
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

@@ -2,7 +2,7 @@ import os
 import json
 import time
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, BigInteger, String, Text, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import create_engine, Column, Integer, BigInteger, String, Text, DateTime, ForeignKey, UniqueConstraint, JSON
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
 # ---------------------------------------------------------------------------
@@ -123,6 +123,26 @@ class Interaction(Base):
     )
 
     review = relationship("Review", back_populates="interactions")
+
+class University(Base):
+    __tablename__ = "universities"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String(200), unique=True, index=True, nullable=False)
+    image_url = Column(String(500), default="")
+    website_url = Column(String(255), default="")
+    kyk_info = Column(JSON, default=list)  # Future-proof KYK dorm data
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "image_url": self.image_url,
+            "website_url": self.website_url,
+            "kyk_info": self.kyk_info if self.kyk_info else [],
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
+        }
 
 def init_db():
     # Create missing tables without deleting persisted user data.
