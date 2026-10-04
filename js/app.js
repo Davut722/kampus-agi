@@ -818,14 +818,14 @@ function initUniversityPage(initialUni) {
             if (uniDb) {
                 const currentTitle = document.getElementById('uni-hero-title');
                 // Sadece hala ayni universite seciliyse DOM'u guncelle
-                if (currentTitle && currentTitle.textContent === selectedUni) {
+                if (currentTitle && currentTitle.textContent.trim() === selectedUni.trim()) {
                     if (uniDb.image_url && uniDb.image_url.trim() !== '') {
                         if (heroImg) heroImg.src = uniDb.image_url;
                         if (heroBlurImg) heroBlurImg.src = uniDb.image_url;
                     } else {
-                        // API'de yoksa Wikipedia fallback (eskisi gibi)
+                        // API'de yoksa Wikipedia fallback
                         fetchWikipediaImage(selectedUni).then(url => {
-                            if (url && currentTitle && currentTitle.textContent === selectedUni) {
+                            if (url && currentTitle && currentTitle.textContent.trim() === selectedUni.trim()) {
                                 if (heroImg) heroImg.src = url;
                                 if (heroBlurImg) heroBlurImg.src = url;
                             }
@@ -845,7 +845,7 @@ function initUniversityPage(initialUni) {
             // Fallback wikipedia
             fetchWikipediaImage(selectedUni).then(url => {
                 const currentTitle = document.getElementById('uni-hero-title');
-                if (url && currentTitle && currentTitle.textContent === selectedUni) {
+                if (url && currentTitle && currentTitle.textContent.trim() === selectedUni.trim()) {
                     if (heroImg) heroImg.src = url;
                     if (heroBlurImg) heroBlurImg.src = url;
                 }
