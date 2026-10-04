@@ -143,5 +143,14 @@ export const api = {
 
     async getInteractions() {
         return await request('/interactions');
+    },
+
+    // Universities
+    async getUniversities() {
+        return await request('/universities');
+    },
+
+    async getUniversity(uniName) {
+        return await request(`/universities/${encodeURIComponent(uniName)}`);
     }
 };
