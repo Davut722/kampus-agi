@@ -2,7 +2,7 @@
    UNI-REVIEW — REST API Client (FastAPI Backend)
    ======================================== */
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'http://127.0.0.1:4639/api';
 
 function getToken() {
     return localStorage.getItem('unireview_token');
