@@ -679,7 +679,7 @@ function initUniversityPage(initialUni) {
 
     if (!reviewsContainer) return () => {};
 
-    // All reviews pool (no local mock data - all from Firebase)
+    // All reviews pool
     const ALL_MOCK = [];
 
     // Default to initialUni or selectedUniState or Boğaziçi
@@ -1024,7 +1024,7 @@ function initUniversityPage(initialUni) {
 
     initProfileUI();
 
-    // Return renderReviews so Firebase updates can re-render without full re-init
+    // Return renderReviews so updates can re-render without full re-init
     return () => renderReviews();
 }
 
@@ -1131,7 +1131,7 @@ function initReviewForm() {
 
         // Build review object
         const newReview = {
-            id: Date.now(), // Fallback ID, Firebase handles real keys automatically if pushed
+            id: Date.now(), // Fallback ID
             user: CURRENT_USER.name,
             initials: CURRENT_USER.initials,
             university: university,
