@@ -131,8 +131,9 @@ class University(Base):
     name = Column(String(200), unique=True, index=True, nullable=False)
     image_url = Column(String(500), default="")
     website_url = Column(String(255), default="")
-    kyk_info = Column(JSON, default=list)  # Future-proof KYK dorm data
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    dorms = relationship("KykDorm", back_populates="university", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
@@ -140,8 +141,30 @@ class University(Base):
             "name": self.name,
             "image_url": self.image_url,
             "website_url": self.website_url,
-            "kyk_info": self.kyk_info if self.kyk_info else [],
+            "kyk_info": [d.to_dict() for d in self.dorms], # Frontend uyumlulugu icin kyk_info adi tutuldu
             "updated_at": self.updated_at.isoformat() if self.updated_at else None
+        }
+
+class KykDorm(Base):
+    __tablename__ = "kyk_dorms"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    university_id = Column(Integer, ForeignKey("universities.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(255), nullable=False)
+    type = Column(String(50), default="Karma") # Kiz, Erkek, Karma
+    distance = Column(String(100), default="")
+    fee = Column(String(100), default="")
+    capacity = Column(String(50), default="")
+
+    university = relationship("University", back_populates="dorms")
+
+    def to_dict(self):
+        return {
+            "ad": self.name,
+            "tip": self.type,
+            "mesafe": self.distance,
+            "ucret": self.fee,
+            "kapasite": self.capacity
         }
 
 def init_db():

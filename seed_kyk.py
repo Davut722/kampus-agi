@@ -1,14 +1,13 @@
 import os
-import json
 import random
-from database import SessionLocal, University
+from database import SessionLocal, University, KykDorm, engine
 
 # Jenerik yurt uretme listeleri
 KYK_TYPES = ["Kız", "Erkek", "Karma"]
 KYK_DISTANCES = ["Kampüs İçi", "Kampüse 500m", "Kampüse 1 km", "Kampüse 2 km", "Kampüse 3 km", "Kampüse 5 km", "Otobüsle 15 dk"]
 KYK_FEES = ["Standart KYK Ücreti", "Burslu/Ücretsiz", "Yarı Özel KYK Ücreti"]
 
-def generate_mock_kyk(uni_name):
+def generate_mock_kyk(uni_name, uni_id):
     base_name = uni_name.replace("Üniversitesi", "").replace("Teknik", "").strip()
     
     # Her üniversite için rastgele 1 ila 4 yurt üret
@@ -31,29 +30,36 @@ def generate_mock_kyk(uni_name):
         
         yurt_ad = random.choice(name_variations)
         
-        kyk_list.append({
-            "ad": yurt_ad,
-            "tip": yurt_type,
-            "mesafe": distance,
-            "ucret": fee,
-            "kapasite": f"{capacity} Kişi"
-        })
+        kyk_list.append(KykDorm(
+            university_id=uni_id,
+            name=yurt_ad,
+            type=yurt_type,
+            distance=distance,
+            fee=fee,
+            capacity=f"{capacity} Kişi"
+        ))
         
     return kyk_list
 
 def seed():
     db = SessionLocal()
     try:
+        # Create kyk_dorms table if not exists
+        KykDorm.__table__.create(engine, checkfirst=True)
+        
+        # Mevcut yurtları temizle (istege bagli, mukerrer engellemek icin)
+        db.query(KykDorm).delete()
+        
         unis = db.query(University).all()
         updated = 0
         for uni in unis:
             # Her zaman yeniden yaz
-            yurtlar = generate_mock_kyk(uni.name)
-            uni.kyk_info = yurtlar
+            yurtlar = generate_mock_kyk(uni.name, uni.id)
+            db.add_all(yurtlar)
             updated += 1
                 
         db.commit()
-        print(f"[BASARILI] {updated} universitenin KYK bilgileri tahmini/jenerik verilerle dolduruldu.")
+        print(f"[BASARILI] {updated} universitenin KYK bilgileri (Ayrı Tabloya) dolduruldu.")
     except Exception as e:
         db.rollback()
         print("[HATA]", e)
