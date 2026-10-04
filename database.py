@@ -9,7 +9,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 # Database configuration
 # ---------------------------------------------------------------------------
 # MySQL bağlantısı – XAMPP varsayılan: kullanıcı root, şifre boş.
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost/unireview"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost/unireview?charset=utf8mb4"
 DATABASE_URL = os.getenv("DATABASE_URL", SQLALCHEMY_DATABASE_URL)
 
 # Engine creation – SQLite uses a special connect_args, MySQL (or others) do not.
