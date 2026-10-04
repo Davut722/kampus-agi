@@ -141,7 +141,6 @@ class University(Base):
             "name": self.name,
             "image_url": self.image_url,
             "website_url": self.website_url,
-            "kyk_info": [d.to_dict() for d in self.dorms], # Frontend uyumlulugu icin kyk_info adi tutuldu
             "updated_at": self.updated_at.isoformat() if self.updated_at else None
         }
 

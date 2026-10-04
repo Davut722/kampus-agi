@@ -839,12 +839,13 @@ function initUniversityPage(initialUni) {
                         }
                     }
 
-                    // KYK Render
-                    if (uniDb.kyk_info) {
-                        renderKykSection(uniDb.kyk_info);
-                    } else {
+                    // KYK Render (Ayrı API çağrısı ile ID üzerinden)
+                    api.getDorms(uniDb.id).then(dorms => {
+                        renderKykSection(dorms);
+                    }).catch(err => {
+                        console.warn("Yurtlar çekilirken hata:", err);
                         renderKykSection([]);
-                    }
+                    });
                 }
             }
         }).catch(err => {

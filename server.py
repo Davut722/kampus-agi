@@ -428,13 +428,19 @@ def get_all_interactions(db: Session = Depends(get_db)):
 
 # ─── Universities Endpoints ──────────────────────────────
 
-from database import University
+from database import University, KykDorm
 
 @app.get("/api/universities")
 def get_universities(db: Session = Depends(get_db)):
-    """Tüm üniversiteleri image_url, website_url ve kyk_info ile listeler."""
+    """Tüm üniversiteleri listeler."""
     records = db.query(University).order_by(University.name).all()
     return [r.to_dict() for r in records]
+
+@app.get("/api/universities/{uni_id}/dorms")
+def get_university_dorms(uni_id: int, db: Session = Depends(get_db)):
+    """ID'si verilen üniversiteye ait tüm KYK ve özel yurtları getirir."""
+    dorms = db.query(KykDorm).filter(KykDorm.university_id == uni_id).all()
+    return [d.to_dict() for d in dorms]
 
 @app.get("/api/universities/{uni_name}")
 def get_university(uni_name: str, db: Session = Depends(get_db)):
