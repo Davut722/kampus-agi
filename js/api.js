@@ -1,18 +1,18 @@
 /* ========================================
-   UNI-REVIEW — REST API Client (FastAPI Backend)
+   Kampüs Sesi — REST API Client (FastAPI Backend)
    ======================================== */
 
 const API_BASE = 'http://127.0.0.1:8000/api';
 
 function getToken() {
-    return localStorage.getItem('unireview_token');
+    return localStorage.getItem('kampus_sesi_token');
 }
 
 function setToken(token) {
     if (token) {
-        localStorage.setItem('unireview_token', token);
+        localStorage.setItem('kampus_sesi_token', token);
     } else {
-        localStorage.removeItem('unireview_token');
+        localStorage.removeItem('kampus_sesi_token');
     }
 }
 

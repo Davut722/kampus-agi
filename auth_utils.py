@@ -2,7 +2,7 @@ import bcrypt
 import jwt
 from datetime import datetime, timedelta
 
-SECRET_KEY = "unireview_super_secret_jwt_key_2026"
+SECRET_KEY = "Kampüs Sesi_super_secret_jwt_key_2026"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 30
 

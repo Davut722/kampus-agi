@@ -1,5 +1,5 @@
 /* ========================================
-   UNI-REVIEW — Page HTML Templates (SPA)
+   Kampüs Sesi — Page HTML Templates (SPA)
    ======================================== */
 
 export const TEMPLATES = {
@@ -409,7 +409,7 @@ export const TEMPLATES = {
                 style="margin: 60px auto; max-width: 400px; padding: 30px; background: var(--color-surface); border-radius: 12px; border: 1px solid var(--color-border); z-index: 10; position: relative;">
                 <div class="login-brand" style="text-align: center; margin-bottom: 30px;">
                     <div class="login-brand-logo" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">🎓
-                        UniReview</div>
+                        Kampüs Sesi</div>
                     <p class="login-brand-desc" style="color: var(--color-text-muted);">Platformu kullanmaya başlamak için
                         giriş yapın.</p>
                 </div>

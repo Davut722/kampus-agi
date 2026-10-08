@@ -1,5 +1,5 @@
 /* ========================================
-   UNI-REVIEW — Shared JavaScript (SPA Architecture + FastAPI Backend)
+   Kampüs Sesi — Shared JavaScript (SPA Architecture + FastAPI Backend)
    ======================================== */
 
 import { api } from './api.js';
@@ -125,7 +125,7 @@ function updateNavForUser(user) {
         const themeIcon = document.getElementById('theme-icon');
 
         // Init theme from localStorage
-        const savedTheme = localStorage.getItem('unireview_theme') || 'dark';
+        const savedTheme = localStorage.getItem('kampus_sesi_theme') || 'dark';
         if (savedTheme === 'light') {
             document.documentElement.setAttribute('data-theme', 'light');
             themeIcon.textContent = '🌙';
@@ -135,11 +135,11 @@ function updateNavForUser(user) {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
             if (currentTheme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('unireview_theme', 'light');
+                localStorage.setItem('kampus_sesi_theme', 'light');
                 themeIcon.textContent = '🌙';
             } else {
                 document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('unireview_theme', 'dark');
+                localStorage.setItem('kampus_sesi_theme', 'dark');
                 themeIcon.textContent = '🌞';
             }
         });
@@ -1596,14 +1596,14 @@ export function renderCurrentRoute() {
 
     // Update document title
     const titles = {
-        'home': 'UniReview — Üniversite Değerlendirme Platformu',
-        'university': 'Üniversite Detay — UniReview',
-        'compare': 'Karşılaştır — UniReview',
-        'review-form': 'Değerlendir — UniReview',
-        'profile': 'Profilim — UniReview',
-        'login': 'Giriş Yap — UniReview'
+        'home': 'Kampüs Sesi — Üniversite Değerlendirme Platformu',
+        'university': 'Üniversite Detay — Kampüs Sesi',
+        'compare': 'Karşılaştır — Kampüs Sesi',
+        'review-form': 'Değerlendir — Kampüs Sesi',
+        'profile': 'Profilim — Kampüs Sesi',
+        'login': 'Giriş Yap — Kampüs Sesi'
     };
-    document.title = titles[route] || 'UniReview';
+    document.title = titles[route] || 'Kampüs Sesi';
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'instant' });

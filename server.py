@@ -17,7 +17,7 @@ from auth_utils import hash_password, verify_password, create_access_token, deco
 init_db()
 
 app = FastAPI(
-    title="UniReview API",
+    title="Kampüs Sesi API",
     description="Üniversite Değerlendirme Platformu REST API ve Veritabanı Backend Servisi",
     version="1.0.0"
 )
@@ -480,9 +480,9 @@ def serve_index_html():
 if __name__ == "__main__":
     import uvicorn
     print("\n" + "="*50)
-    print("UniReview Sunucusu Baslatiliyor...")
+    print("Kampüs Sesi Sunucusu Baslatiliyor...")
     print("Web Sitesi: http://localhost:8000")
     print("API Docs: http://localhost:8000/docs")
-    print("Veritabani:  MySQL (unireview)")
+    print("Veritabani:  MySQL (Kampüs Sesi)")
     print("="*50 + "\n")
     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
