@@ -491,63 +491,54 @@ export const TEMPLATES = {
     `,
 
     login: `
-        <div class="login-layout page-view">
-            <div class="login-bg"></div>
-            <div class="login-orb login-orb-1"></div>
-            <div class="login-orb login-orb-2"></div>
+        <div class="auth-page">
+            <div class="auth-bg-shapes">
+                <div class="auth-shape auth-shape-1"></div>
+                <div class="auth-shape auth-shape-2"></div>
+            </div>
 
-            <div class="login-card-container"
-                style="margin: 60px auto; max-width: 400px; padding: 30px; background: var(--color-surface); border-radius: 12px; border: 1px solid var(--color-border); z-index: 10; position: relative;">
-                <div class="login-brand" style="text-align: center; margin-bottom: 30px;">
-                    <div class="login-brand-logo" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">🎓
-                        Kampüs Sesi</div>
-                    <p class="login-brand-desc" style="color: var(--color-text-muted);">Platformu kullanmaya başlamak için
-                        giriş yapın.</p>
+            <div class="auth-glass-card">
+                <div class="auth-header">
+                    <span class="auth-header__icon">🎓</span>
+                    <h1 class="auth-header__title">Kampüs Sesi</h1>
+                    <p class="auth-header__desc">Platforma giriş yap veya aramıza katıl.</p>
                 </div>
 
-                <div class="auth-tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <button type="button" class="btn auth-tab active" data-tab="login"
-                        style="flex: 1; padding: 10px; background: var(--color-surface); border: 2px solid var(--color-accent); color: var(--color-text); border-radius: 8px; cursor: pointer;">Giriş
-                        Yap</button>
-                    <button type="button" class="btn auth-tab" data-tab="register"
-                        style="flex: 1; padding: 10px; background: transparent; border: 2px solid transparent; color: var(--color-text-muted); border-radius: 8px; cursor: pointer;">Kayıt
-                        Ol</button>
+                <div class="auth-tabs-modern">
+                    <button type="button" class="auth-tab-btn auth-tab active" data-tab="login">Giriş Yap</button>
+                    <button type="button" class="auth-tab-btn auth-tab" data-tab="register">Kayıt Ol</button>
                 </div>
 
-                <form id="login-form" class="form login-form active-form">
-                    <div class="form__group">
-                        <label class="form__label" for="login-email">E-posta Adresi</label>
-                        <input type="email" id="login-email" class="form__input" placeholder="mail@uni.edu.tr" required>
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form login-form active-form">
+                    <div class="auth-input-group">
+                        <label for="login-email">E-posta Adresi</label>
+                        <input type="email" id="login-email" class="auth-input" placeholder="ogrenci@uni.edu.tr" required>
                     </div>
-                    <div class="form__group" style="margin-bottom: var(--space-xl)">
-                        <label class="form__label" for="login-password">Şifre</label>
-                        <input type="password" id="login-password" class="form__input" placeholder="••••••••" required>
+                    <div class="auth-input-group" style="margin-bottom: 25px;">
+                        <label for="login-password">Şifre</label>
+                        <input type="password" id="login-password" class="auth-input" placeholder="••••••••" required>
                     </div>
-                    <button type="submit" class="btn btn--primary"
-                        style="width: 100%; font-size: 1rem; padding: 14px;">Giriş Yap ✨</button>
-                    <div id="login-error"
-                        style="color: var(--color-danger); margin-top: 10px; text-align: center; font-size: 0.9rem;"></div>
+                    <button type="submit" class="auth-submit-btn">Giriş Yap ✨</button>
+                    <div id="login-error" style="color: var(--color-danger); margin-top: 15px; text-align: center; font-size: 0.9rem; font-weight: 500;"></div>
                 </form>
 
-                <form id="register-form" class="form login-form" style="display: none;">
-                    <div class="form__group">
-                        <label class="form__label" for="reg-name">Adınız Soyadınız</label>
-                        <input type="text" id="reg-name" class="form__input" placeholder="Örn: Elif Yılmaz" required>
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form login-form">
+                    <div class="auth-input-group">
+                        <label for="reg-name">Adınız Soyadınız</label>
+                        <input type="text" id="reg-name" class="auth-input" placeholder="Örn: Elif Yılmaz" required>
                     </div>
-                    <div class="form__group">
-                        <label class="form__label" for="reg-email">E-posta Adresi</label>
-                        <input type="email" id="reg-email" class="form__input" placeholder="mail@uni.edu.tr" required>
+                    <div class="auth-input-group">
+                        <label for="reg-email">E-posta Adresi</label>
+                        <input type="email" id="reg-email" class="auth-input" placeholder="ogrenci@uni.edu.tr" required>
                     </div>
-                    <div class="form__group" style="margin-bottom: var(--space-xl)">
-                        <label class="form__label" for="reg-password">Şifre (En az 6 karakter)</label>
-                        <input type="password" id="reg-password" class="form__input" placeholder="••••••••" required
-                            minlength="6">
+                    <div class="auth-input-group" style="margin-bottom: 25px;">
+                        <label for="reg-password">Şifre (En az 6 karakter)</label>
+                        <input type="password" id="reg-password" class="auth-input" placeholder="••••••••" required minlength="6">
                     </div>
-                    <button type="submit" class="btn btn--secondary"
-                        style="width: 100%; font-size: 1rem; padding: 14px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text);">Hesap
-                        Oluştur 🚀</button>
-                    <div id="reg-error"
-                        style="color: var(--color-danger); margin-top: 10px; text-align: center; font-size: 0.9rem;"></div>
+                    <button type="submit" class="auth-submit-btn">Hesap Oluştur 🚀</button>
+                    <div id="reg-error" style="color: var(--color-danger); margin-top: 15px; text-align: center; font-size: 0.9rem; font-weight: 500;"></div>
                 </form>
             </div>
         </div>
