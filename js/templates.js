@@ -15,40 +15,23 @@ export const TEMPLATES = {
                 <div class="home-bg__noise"></div>
             </div>
 
-            <!-- Hero -->
-            <section class="home-hero container">
-                <div class="home-hero__left">
-                    <p class="home-eyebrow">🎓 Türkiye'nin üniversite rehberi</p>
-                    <h1 class="home-hero__title">
-                        Üniversiteyi<br>
-                        <span class="home-hero__title-em">içeriden</span> tanı.
+            <!-- Modern Centered Hero -->
+            <section class="home-hero-centered container">
+                <div class="hero-centered__content">
+                    <h1 class="hero-centered__title">
+                        Kampüsün Gerçek Sesine Kulak Ver
                     </h1>
-                    <p class="home-hero__desc">
-                        Broşürlerde yazanı değil, orada okuyanların gerçekten yaşadığını öğren.
-                        Tercih yapmadan önce, gerçek öğrenci seslerine kulak ver.
+                    <p class="hero-centered__desc">
+                        Broşürlerde yazanı değil, orada okuyanların gerçekten yaşadığını öğren. Üniversite, ders veya hoca hakkında aradığın her şey burada.
                     </p>
-                    <div class="home-hero__actions">
-                        <a href="#/university" class="btn btn--primary home-hero__btn">Üniversiteleri Keşfet</a>
-                        <a href="#/review-form" class="home-hero__link">Yorumunu ekle <span>→</span></a>
+                    
+                    <div class="hero-centered__search-wrapper">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" class="hero-centered__search-input" placeholder="Üniversite, Ders veya Hoca ara...">
                     </div>
-                </div>
 
-                <div class="home-hero__right">
-                    <div class="home-stat-card">
-                        <div class="home-stat-card__row">
-                            <div class="home-stat-card__item">
-                                <span class="home-stat-card__val" id="stat-unis">80+</span>
-                                <span class="home-stat-card__lbl">Üniversite</span>
-                            </div>
-                            <div class="home-stat-card__sep"></div>
-                            <div class="home-stat-card__item">
-                                <span class="home-stat-card__val home-stat-card__val--warm" id="stat-reviews">—</span>
-                                <span class="home-stat-card__lbl">Değerlendirme</span>
-                            </div>
-                        </div>
-                        <div class="home-stat-card__quote">
-                            "Kampüs hayatı, gerçek öğrencilerin gözünden."
-                        </div>
+                    <div class="hero-centered__actions">
+                        <a href="#/review-form" class="btn btn--primary hero-centered__btn-main">Tartışmaya Katıl</a>
                     </div>
                 </div>
             </section>

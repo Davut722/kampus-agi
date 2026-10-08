@@ -100,63 +100,59 @@ window.signOutBackend = async function() {
 };
 
 function updateNavForUser(user) {
-    const navLinks = document.querySelector('.nav__links');
-    if (!navLinks) return;
+    const navActions = document.getElementById('nav-actions');
+    if (!navActions) return;
 
-    let authLinkLi = document.getElementById('nav-auth-link');
-    if (!authLinkLi) {
-        authLinkLi = document.createElement('li');
-        authLinkLi.id = 'nav-auth-link';
-        navLinks.appendChild(authLinkLi);
-    }
-
-    let themeToggleLi = document.getElementById('nav-theme-toggle');
-    if (!themeToggleLi) {
-        themeToggleLi = document.createElement('li');
-        themeToggleLi.id = 'nav-theme-toggle';
-        themeToggleLi.innerHTML = `
-            <button id="theme-btn" style="background:transparent; border:none; color:var(--color-text); cursor:pointer; font-size:1.2rem; display:flex; align-items:center;" aria-label="Temayı Değiştir">
-                <span id="theme-icon">🌞</span>
-            </button>
-        `;
-        navLinks.insertBefore(themeToggleLi, authLinkLi);
-
-        const themeBtn = document.getElementById('theme-btn');
-        const themeIcon = document.getElementById('theme-icon');
-
-        // Init theme from localStorage
-        const savedTheme = localStorage.getItem('kampus_sesi_theme') || 'dark';
-        if (savedTheme === 'light') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            themeIcon.textContent = '🌙';
-        }
-
-        themeBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            if (currentTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('kampus_sesi_theme', 'light');
-                themeIcon.textContent = '🌙';
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('kampus_sesi_theme', 'dark');
-                themeIcon.textContent = '🌞';
-            }
-        });
-    }
+    // Build the actions HTML based on auth state
+    let actionsHtml = `
+        <button id="theme-btn" style="background:transparent; border:none; color:var(--color-text); cursor:pointer; font-size:1.2rem; display:flex; align-items:center;" aria-label="Temayı Değiştir">
+            <span id="theme-icon">🌞</span>
+        </button>
+    `;
 
     if (user && user.uid !== 'guest') {
-        authLinkLi.innerHTML = `<a href="#/home" id="logout-btn" class="nav__link" style="color: var(--color-danger); cursor: pointer;">Çıkış (${user.name})</a>`;
-
-        const logoutBtn = document.getElementById('logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                await window.signOutBackend();
-            });
-        }
+        actionsHtml += `
+            <a href="#/profile" class="btn btn--outline" style="padding: 6px 12px; font-size:0.9rem;">Profilim</a>
+            <a href="#/home" id="logout-btn" class="btn btn--outline" style="padding: 6px 12px; font-size:0.9rem; border-color: var(--color-danger); color: var(--color-danger);">Çıkış</a>
+        `;
     } else {
-        authLinkLi.innerHTML = `<a href="#/login" class="nav__link" data-nav="login">Giriş Yap</a>`;
+        actionsHtml += `
+            <a href="#/login" class="btn btn--primary" style="padding: 6px 16px; font-size:0.9rem;">Giriş Yap</a>
+        `;
+    }
+
+    navActions.innerHTML = actionsHtml;
+
+    // Theme logic
+    const themeBtn = document.getElementById('theme-btn');
+    const themeIcon = document.getElementById('theme-icon');
+
+    const savedTheme = localStorage.getItem('kampus_sesi_theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+    }
+
+    themeBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('kampus_sesi_theme', 'light');
+            themeIcon.textContent = '🌙';
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('kampus_sesi_theme', 'dark');
+            themeIcon.textContent = '🌞';
+        }
+    });
+
+    // Logout logic
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await window.signOutBackend();
+        });
     }
 }
 
