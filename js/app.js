@@ -419,12 +419,37 @@ function showToast(message) {
 
 function setupNavEvents() {
     const hamburger = document.querySelector('.nav__hamburger');
-    const navLinks = document.querySelector('.nav__links');
+    const sideDrawer = document.getElementById('side-drawer');
+    const sideDrawerOverlay = document.getElementById('side-drawer-overlay');
+    const sideDrawerClose = document.getElementById('side-drawer-close');
 
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('nav__links--open');
-            hamburger.classList.toggle('nav__hamburger--active');
+    function toggleDrawer() {
+        if (sideDrawer && sideDrawerOverlay) {
+            sideDrawer.classList.toggle('active');
+            sideDrawerOverlay.classList.toggle('active');
+        }
+    }
+
+    if (hamburger) {
+        hamburger.addEventListener('click', toggleDrawer);
+    }
+    
+    if (sideDrawerClose) {
+        sideDrawerClose.addEventListener('click', toggleDrawer);
+    }
+    
+    if (sideDrawerOverlay) {
+        sideDrawerOverlay.addEventListener('click', toggleDrawer);
+    }
+    
+    // Close drawer when a link is clicked
+    if (sideDrawer) {
+        const links = sideDrawer.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                sideDrawer.classList.remove('active');
+                if (sideDrawerOverlay) sideDrawerOverlay.classList.remove('active');
+            });
         });
     }
 }
