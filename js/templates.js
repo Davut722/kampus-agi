@@ -15,29 +15,46 @@ export const TEMPLATES = {
                 <div class="home-bg__noise"></div>
             </div>
 
-            <!-- Modern Centered Hero -->
-            <section class="home-hero-centered container">
+            <!-- Simplified Hero -->
+            <section class="home-hero-centered container" style="padding: var(--space-xl) var(--space-md); min-height: auto;">
                 <div class="hero-centered__content">
-                    <h1 class="hero-centered__title">
+                    <h1 class="hero-centered__title" style="font-size: 2rem;">
                         Kampüsün Gerçek Sesine Kulak Ver
                     </h1>
-                    <p class="hero-centered__desc">
-                        Broşürlerde yazanı değil, orada okuyanların gerçekten yaşadığını öğren. Üniversite, ders veya hoca hakkında aradığın her şey burada.
+                    <p class="hero-centered__desc" style="max-width: 600px; margin: 0 auto var(--space-lg) auto;">
+                        Broşürlerde yazanı değil, orada okuyanların gerçekten yaşadığını öğren.
                     </p>
                     
-                    <div class="hero-centered__search-wrapper">
+                    <div class="hero-centered__search-wrapper" style="max-width: 500px; margin: 0 auto var(--space-md) auto;">
                         <i data-lucide="search" class="search-icon"></i>
-                        <input type="text" class="hero-centered__search-input" placeholder="Üniversite, Ders veya Hoca ara...">
+                        <input type="text" class="hero-centered__search-input" placeholder="Üniversite veya bölüm ara...">
                     </div>
+                </div>
+            </section>
 
-                    <div class="hero-centered__actions">
-                        <a href="#/review-form" class="btn btn--primary hero-centered__btn-main">Tartışmaya Katıl</a>
+            <!-- Features Section -->
+            <section class="home-features container" style="padding-bottom: var(--space-xl);">
+                <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg);">
+                    <div class="feature-card" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
+                        <div class="feature-icon" style="color: var(--color-accent); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="shield-check" style="width: 36px; height: 36px;"></i></div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Gerçek Deneyimler</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.9rem;">Sadece o üniversitede okuyan veya mezun olmuş öğrencilerin dürüst yorumlarını okuyun.</p>
+                    </div>
+                    <div class="feature-card" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
+                        <div class="feature-icon" style="color: var(--color-accent-2); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="scale" style="width: 36px; height: 36px;"></i></div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Detaylı Kıyaslama</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.9rem;">Ulaşım, yurt, yemekhane ve akademik kadro gibi kriterlerde iki üniversiteyi yan yana görün.</p>
+                    </div>
+                    <div class="feature-card" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
+                        <div class="feature-icon" style="color: var(--color-success); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="users" style="width: 36px; height: 36px;"></i></div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Aktif Topluluk</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.9rem;">Aklınıza takılan soruları sorun, diğer öğrencilerden tavsiye alın ve kampüse hazır gidin.</p>
                     </div>
                 </div>
             </section>
 
             <!-- Feed & Sidebar Section -->
-            <section class="home-feed-section">
+            <section class="home-feed-section container">
                 <!-- Pill Filters -->
                 <div class="feed-filters">
                     <button class="feed-filter-btn active">En Yeniler</button>
@@ -185,6 +202,25 @@ export const TEMPLATES = {
                             </div>
                         </div>
                     </aside>
+                </div>
+            </section>
+            
+            <!-- FAQ Section -->
+            <section class="home-faq container" style="padding-top: var(--space-2xl); padding-bottom: var(--space-xl);">
+                <h2 class="section-title" style="text-align: center; margin-bottom: var(--space-xl);">Sıkça Sorulan <span>Sorular</span></h2>
+                <div class="faq-list" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-md);">
+                    <div class="faq-item" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+                        <h4 class="faq-question" style="font-family: var(--font-heading); margin-bottom: 8px; color: var(--color-text); display: flex; align-items: center; gap: 8px;"><i data-lucide="help-circle" style="color: var(--color-accent); width: 20px; height: 20px;"></i> Yorum yazmak için üye olmak zorunda mıyım?</h4>
+                        <p class="faq-answer" style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-left: 28px;">Evet, platformda sahte yorumları engellemek ve güvenilirliği sağlamak adına yorum yazmak ve soru sormak için üyelik gereklidir. Okumak için ise üye olmanıza gerek yoktur.</p>
+                    </div>
+                    <div class="faq-item" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+                        <h4 class="faq-question" style="font-family: var(--font-heading); margin-bottom: 8px; color: var(--color-text); display: flex; align-items: center; gap: 8px;"><i data-lucide="help-circle" style="color: var(--color-accent); width: 20px; height: 20px;"></i> Üniversitelerin bilgileri güncel mi?</h4>
+                        <p class="faq-answer" style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-left: 28px;">Bilgiler düzenli olarak sistemimiz, yerel öğrenciler ve moderatör ekibimiz tarafından güncellenmektedir. Şehirler arası ulaşım süreleri ve yurt kontenjanları gibi veriler referans niteliğindedir.</p>
+                    </div>
+                    <div class="faq-item" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+                        <h4 class="faq-question" style="font-family: var(--font-heading); margin-bottom: 8px; color: var(--color-text); display: flex; align-items: center; gap: 8px;"><i data-lucide="help-circle" style="color: var(--color-accent); width: 20px; height: 20px;"></i> Puanlamalar neye göre yapılıyor?</h4>
+                        <p class="faq-answer" style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-left: 28px;">Üniversitelerin puanları; öğrencilerin kampüs, eğitim, sosyal hayat ve imkanlar gibi çeşitli kriterlerde verdiği bağımsız puanların otomatik ortalaması alınarak hesaplanır.</p>
+                    </div>
                 </div>
             </section>
 
