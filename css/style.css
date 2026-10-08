@@ -185,13 +185,14 @@ h4 {
 
 /* Hamburger */
 .nav__hamburger {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 5px;
   background: none;
   border: none;
   cursor: pointer;
   padding: var(--space-xs);
+  margin-left: var(--space-md);
 }
 
 .nav__hamburger-line {

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kampüs Sesi — Üniversite Değerlendirme Platformu</title>
-    <link rel="stylesheet" href="css/style.css?v=50">
+    <link rel="stylesheet" href="css/style.css?v=52">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 
@@ -16,13 +16,6 @@
             <div class="nav__left">
                 <a href="#/home" class="nav__logo" data-nav="home"><span class="nav__logo-icon">🎓</span> Kampüs Sesi</a>
             </div>
-            
-            <button class="nav__hamburger" aria-label="Menüyü aç">
-                <span class="nav__hamburger-line"></span>
-                <span class="nav__hamburger-line"></span>
-                <span class="nav__hamburger-line"></span>
-            </button>
-            
             <div class="nav__center">
                 <ul class="nav__links">
                     <li><a href="#/home" class="nav__link nav__link--active" data-nav="home">Ana Sayfa</a></li>
@@ -32,8 +25,16 @@
                 </ul>
             </div>
 
-            <div class="nav__right" id="nav-actions">
-                <!-- Theme toggle and Auth link will be injected here via app.js -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="nav__right" id="nav-actions">
+                    <!-- Theme toggle and Auth link will be injected here via app.js -->
+                </div>
+                
+                <button class="nav__hamburger" aria-label="Menüyü aç">
+                    <span class="nav__hamburger-line"></span>
+                    <span class="nav__hamburger-line"></span>
+                    <span class="nav__hamburger-line"></span>
+                </button>
             </div>
         </div>
     </nav>
