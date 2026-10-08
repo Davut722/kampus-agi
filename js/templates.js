@@ -36,47 +36,155 @@ export const TEMPLATES = {
                 </div>
             </section>
 
-            <!-- Feature Bento -->
-            <section class="home-bento container">
-                <a href="#/university" class="home-bento__card home-bento__card--wide">
-                    <div class="home-bento__icon">🔍</div>
-                    <div class="home-bento__body">
-                        <h3 class="home-bento__title">Üniversiteleri Keşfet</h3>
-                        <p class="home-bento__desc">Türkiye genelindeki yüzlerce üniversiteyi ara, filtrele ve karşılaştır. Her kampüs için gerçek öğrenci yorumları.</p>
-                    </div>
-                    <span class="home-bento__arrow">↗</span>
-                </a>
+            <!-- Feed & Sidebar Section -->
+            <section class="home-feed-section">
+                <!-- Pill Filters -->
+                <div class="feed-filters">
+                    <button class="feed-filter-btn active">En Yeniler</button>
+                    <button class="feed-filter-btn">Popüler</button>
+                    <button class="feed-filter-btn">Kampüs Hayatı</button>
+                    <button class="feed-filter-btn">Bölümler</button>
+                    <button class="feed-filter-btn">Soru & Cevap</button>
+                </div>
 
-                <a href="#/compare" class="home-bento__card">
-                    <div class="home-bento__icon">⚖️</div>
-                    <div class="home-bento__body">
-                        <h3 class="home-bento__title">Karşılaştır</h3>
-                        <p class="home-bento__desc">İki üniversiteyi yan yana koy. Puan, yorum ve olanakları birlikte değerlendir.</p>
-                    </div>
-                    <span class="home-bento__arrow">↗</span>
-                </a>
+                <div class="home-feed-layout">
+                    <!-- Left Column: Feed -->
+                    <div class="feed-column">
+                        
+                        <!-- Mock Post 1 -->
+                        <article class="feed-card">
+                            <div class="feed-card__header">
+                                <div class="feed-card__user">
+                                    <div class="feed-card__avatar">AE</div>
+                                    <div>
+                                        <div class="feed-card__name">Ahmet Erdem</div>
+                                        <div class="feed-card__time">2 saat önce</div>
+                                    </div>
+                                </div>
+                                <span class="feed-card__tag">Kampüs Hayatı</span>
+                            </div>
+                            <h3 class="feed-card__title">Merkez kütüphane vize haftası ne kadar kalabalık oluyor?</h3>
+                            <p class="feed-card__excerpt">Arkadaşlar haftaya vizeler başlıyor. Kampüsteki kütüphanede gecelemek istiyorum ama yer bulmak çok zormuş diye duydum. Sabah kaç gibi gitmek lazım? Alternatif çalışma salonları nereler?</p>
+                            <div class="feed-card__footer">
+                                <div class="feed-action">
+                                    <i data-lucide="heart" class="icon-sm"></i> 24 Beğeni
+                                </div>
+                                <div class="feed-action">
+                                    <i data-lucide="message-square" class="icon-sm"></i> 8 Yorum
+                                </div>
+                            </div>
+                        </article>
 
-                <a href="#/review-form" class="home-bento__card home-bento__card--accent">
-                    <div class="home-bento__icon">✍️</div>
-                    <div class="home-bento__body">
-                        <h3 class="home-bento__title">Yorum Yaz</h3>
-                        <p class="home-bento__desc">Üniversiteni değerlendir, topluluğa katkı sağla.</p>
-                    </div>
-                    <span class="home-bento__arrow">↗</span>
-                </a>
-            </section>
+                        <!-- Mock Post 2 -->
+                        <article class="feed-card">
+                            <div class="feed-card__header">
+                                <div class="feed-card__user">
+                                    <div class="feed-card__avatar">ZY</div>
+                                    <div>
+                                        <div class="feed-card__name">Zeynep Yılmaz</div>
+                                        <div class="feed-card__time">5 saat önce</div>
+                                    </div>
+                                </div>
+                                <span class="feed-card__tag">Bölümler</span>
+                            </div>
+                            <h3 class="feed-card__title">Bilgisayar Mühendisliği 1. Sınıf Laptop Önerisi</h3>
+                            <p class="feed-card__excerpt">Selamlar, bu sene bilgisayar mühendisliğine başlıyorum. Bütçem çok yüksek değil ama beni 4 yıl idare edecek, kod yazarken üzmeyecek bir laptop arıyorum. M1 işlemcili Mac'ler yeterli olur mu yoksa Windows mu tercih etmeliyim?</p>
+                            <div class="feed-card__footer">
+                                <div class="feed-action">
+                                    <i data-lucide="heart" class="icon-sm"></i> 45 Beğeni
+                                </div>
+                                <div class="feed-action">
+                                    <i data-lucide="message-square" class="icon-sm"></i> 22 Yorum
+                                </div>
+                            </div>
+                        </article>
 
-            <!-- Popular Universities strip -->
-            <section class="home-unis container">
-                <p class="home-unis__label">Çok incelenenler</p>
-                <div class="home-unis__strip">
-                    <button class="home-uni-pill" type="button" data-university="Boğaziçi Üniversitesi">Boğaziçi</button>
-                    <button class="home-uni-pill" type="button" data-university="Orta Doğu Teknik Üniversitesi (ODTÜ)">ODTÜ</button>
-                    <button class="home-uni-pill" type="button" data-university="İstanbul Teknik Üniversitesi">İTÜ</button>
-                    <button class="home-uni-pill" type="button" data-university="Hacettepe Üniversitesi">Hacettepe</button>
-                    <button class="home-uni-pill" type="button" data-university="Ege Üniversitesi">Ege</button>
-                    <button class="home-uni-pill" type="button" data-university="Bilkent Üniversitesi">Bilkent</button>
-                    <button class="home-uni-pill" type="button" data-university="Koç Üniversitesi">Koç</button>
+                        <!-- Mock Post 3 -->
+                        <article class="feed-card">
+                            <div class="feed-card__header">
+                                <div class="feed-card__user">
+                                    <div class="feed-card__avatar">CS</div>
+                                    <div>
+                                        <div class="feed-card__name">Caner Şahin</div>
+                                        <div class="feed-card__time">1 gün önce</div>
+                                    </div>
+                                </div>
+                                <span class="feed-card__tag">Öneriler</span>
+                            </div>
+                            <h3 class="feed-card__title">Yemekhane fiyatları ve alternatif mekanlar</h3>
+                            <p class="feed-card__excerpt">Bu dönem yemekhane fiyatlarına gelen zamdan sonra kampüs dışındaki alternatif mekanları denemeye karar verdim. Doğu kampüs kapısındaki ev yemekleri yapan yer fiyat/performans olarak bayağı iyi. Başka önerisi olan var mı?</p>
+                            <div class="feed-card__footer">
+                                <div class="feed-action">
+                                    <i data-lucide="heart" class="icon-sm"></i> 112 Beğeni
+                                </div>
+                                <div class="feed-action">
+                                    <i data-lucide="message-square" class="icon-sm"></i> 34 Yorum
+                                </div>
+                            </div>
+                        </article>
+
+                        <div class="feed-load-more">
+                            <button class="btn-load-more">Daha Fazla Yükle</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Sidebar (Sticky) -->
+                    <aside class="sidebar-column">
+                        <!-- Widget 1: Trending -->
+                        <div class="sidebar-widget">
+                            <h4 class="sidebar-widget__title">🔥 Şu An Gündemde</h4>
+                            <ul class="trending-list">
+                                <li class="trending-item">
+                                    <span class="trending-category">Soru & Cevap</span>
+                                    <span class="trending-topic">Yaz Okulu Ücretleri</span>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-category">Etkinlik</span>
+                                    <span class="trending-topic">Bahar Şenliği 2026 Line-up</span>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-category">Akademik</span>
+                                    <span class="trending-topic">Vize Programı Açıklandı</span>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-category">Kampüs Hayatı</span>
+                                    <span class="trending-topic">Ring Sefer Saatleri Değişikliği</span>
+                                </li>
+                                <li class="trending-item">
+                                    <span class="trending-category">Tartışma</span>
+                                    <span class="trending-topic">Seçmeli Ders Kontenjanları</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Widget 2: Leaderboard -->
+                        <div class="sidebar-widget">
+                            <h4 class="sidebar-widget__title">🏆 Haftanın En Aktifleri</h4>
+                            <div class="leaderboard-list">
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-avatar">MK</div>
+                                    <div class="leaderboard-info">
+                                        <div class="leaderboard-name">Mehmet K.</div>
+                                        <div class="leaderboard-score">1,250 Puan</div>
+                                    </div>
+                                </div>
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-avatar">AS</div>
+                                    <div class="leaderboard-info">
+                                        <div class="leaderboard-name">Ayşe S.</div>
+                                        <div class="leaderboard-score">980 Puan</div>
+                                    </div>
+                                </div>
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-avatar">BD</div>
+                                    <div class="leaderboard-info">
+                                        <div class="leaderboard-name">Burak D.</div>
+                                        <div class="leaderboard-score">845 Puan</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </section>
 
