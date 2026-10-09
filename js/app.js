@@ -1748,3 +1748,40 @@ document.addEventListener('DOMContentLoaded', async () => {
 window.addEventListener('hashchange', () => {
     renderCurrentRoute();
 });
+
+// ─── Global Mouse Glow Effect ────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const glow = document.getElementById('mouse-glow');
+    if (!glow) return;
+
+    let isMouseMoving = false;
+    let mouseTimeout;
+
+    window.addEventListener('mousemove', (e) => {
+        // Show glow on move
+        if (!isMouseMoving) {
+            glow.style.opacity = '1';
+            isMouseMoving = true;
+        }
+
+        // Use requestAnimationFrame for smooth performance
+        requestAnimationFrame(() => {
+            glow.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+        });
+
+        // Hide after 2 seconds of inactivity
+        clearTimeout(mouseTimeout);
+        mouseTimeout = setTimeout(() => {
+            glow.style.opacity = '0';
+            isMouseMoving = false;
+        }, 2000);
+    }, { passive: true });
+    
+    // Hide when mouse leaves the window
+    window.addEventListener('mouseout', (e) => {
+        if (!e.relatedTarget && !e.toElement) {
+            glow.style.opacity = '0';
+            isMouseMoving = false;
+        }
+    });
+});

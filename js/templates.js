@@ -32,23 +32,23 @@ export const TEMPLATES = {
                 </div>
             </section>
 
-            <!-- Fun Features Section -->
-            <section class="home-features container" style="padding-bottom: var(--space-xl);">
+            <!-- Minimalist Features Section -->
+            <section class="home-features container reveal-up" style="padding-bottom: var(--space-xl); position: relative; z-index: 10;">
                 <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg);">
-                    <div class="feature-card fun-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center;">
-                        <div class="feature-icon" style="font-size: 3rem; margin-bottom: var(--space-sm);">🤫</div>
-                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Gerçek Dedikodular</h3>
-                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Sadece broşürlerdeki süslü lafları değil, vizelerde kütüphane savaşlarını ve yemekhane sırasını ilk elden öğren.</p>
+                    <div class="feature-card minimal-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center; transition: all 0.3s ease;">
+                        <div class="feature-icon" style="color: var(--color-accent); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="shield-check" style="width: 40px; height: 40px;"></i></div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading); font-size: 1.25rem;">Doğrulanmış Deneyimler</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Şeffaflığı ön planda tutarak, kampüs yaşamını birinci ağızdan, dürüst yorumlarla sunuyoruz.</p>
                     </div>
-                    <div class="feature-card fun-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center;">
-                        <div class="feature-icon" style="font-size: 3rem; margin-bottom: var(--space-sm);">🥊</div>
-                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Okulları Kapıştır</h3>
-                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Hangi üniversitenin şenlikleri daha iyi? Hangi yurdun interneti kopmuyor? Seç, karşılaştır, tarafını belirle.</p>
+                    <div class="feature-card minimal-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center; transition: all 0.3s ease;">
+                        <div class="feature-icon" style="color: var(--color-accent-2); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="git-compare-arrows" style="width: 40px; height: 40px;"></i></div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading); font-size: 1.25rem;">Akıllı Karşılaştırma</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Birden fazla üniversiteyi akademik, sosyal ve ulaşım gibi temel metriklerde yan yana kıyaslayın.</p>
                     </div>
-                    <div class="feature-card fun-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center;">
-                        <div class="feature-icon" style="font-size: 3rem; margin-bottom: var(--space-sm);">🍕</div>
-                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Sosyalleş & Dertleş</h3>
-                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Aynı dertten muzdarip diğer öğrencilerle tanış, not dilen, tavsiye al. Kampüs hayatına 1-0 önde başla.</p>
+                    <div class="feature-card minimal-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center; transition: all 0.3s ease;">
+                        <div class="feature-icon" style="color: var(--color-success); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="network" style="width: 40px; height: 40px;"></i></div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading); font-size: 1.25rem;">Topluluk Ağı</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Bölümünüzdeki veya hedeflediğiniz üniversitedeki kişilerle iletişim kurun, sorularınızı yöneltin.</p>
                     </div>
                 </div>
             </section>

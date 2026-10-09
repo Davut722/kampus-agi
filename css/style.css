@@ -3287,3 +3287,42 @@ h4 {
     transform: translateY(0);
   }
 }
+
+/* ========================================
+   MOUSE GLOW EFFECT
+   ======================================== */
+#mouse-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0) 60%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.5s ease;
+  opacity: 0;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+[data-theme="light"] #mouse-glow {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0) 60%);
+  mix-blend-mode: multiply;
+}
+
+/* ========================================
+   MINIMAL CARDS ANIMATION
+   ======================================== */
+.minimal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .minimal-card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.05);
+}
