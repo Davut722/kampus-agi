@@ -1614,6 +1614,13 @@ export function renderCurrentRoute() {
     const hamburger = document.querySelector('.nav__hamburger');
     if (navLinks) navLinks.classList.remove('nav__links--open');
     if (hamburger) hamburger.classList.remove('nav__hamburger--active');
+    
+    // Call GSAP initialization if on home route
+    if (route === 'home') {
+        setTimeout(() => {
+            if (typeof initGSAPHome === 'function') initGSAPHome();
+        }, 100);
+    }
 
     // Update document title
     const titles = {
@@ -1769,3 +1776,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+// GSAP ScrollTrigger for Home Parallax & Search Pin
+export function initGSAPHome() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const hero = document.querySelector('.home-hero-centered');
+    if (hero) {
+        // Parallax effect on hero title and subtitle
+        gsap.to('.hero-centered__title, .hero-centered__desc', {
+            y: 150,
+            opacity: 0.2,
+            ease: "none",
+            scrollTrigger: {
+                trigger: '.home-hero-centered',
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // Pin Search Bar
+        const searchBox = document.querySelector('.hero-centered__search-wrapper');
+        if (searchBox) {
+            ScrollTrigger.create({
+                trigger: searchBox,
+                start: "top center",
+                end: "+=350",
+                pin: true,
+                pinSpacing: false,
+                scrub: true
+            });
+        }
+    }
+}
