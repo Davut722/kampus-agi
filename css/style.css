@@ -3291,26 +3291,19 @@ h4 {
 /* ========================================
    MOUSE GLOW EFFECT
    ======================================== */
-#mouse-glow {
+#vanta-bg {
   position: fixed;
   top: 0;
   left: 0;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(234, 88, 12, 0.15) 25%, transparent 60%);
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.25; /* Low opacity to preserve readability */
   pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.5s ease;
-  opacity: 0;
-  mix-blend-mode: screen;
-  will-change: transform;
 }
 
-[data-theme="light"] #mouse-glow {
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(234, 88, 12, 0.15) 25%, transparent 60%);
-  mix-blend-mode: multiply;
+[data-theme="light"] #vanta-bg {
+  opacity: 0.1; /* Even more subtle in light mode */
 }
 
 /* ========================================

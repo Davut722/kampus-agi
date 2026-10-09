@@ -1749,39 +1749,23 @@ window.addEventListener('hashchange', () => {
     renderCurrentRoute();
 });
 
-// ─── Global Mouse Glow Effect ────────────
+// Vanta.js Background
 document.addEventListener('DOMContentLoaded', () => {
-    const glow = document.getElementById('mouse-glow');
-    if (!glow) return;
-
-    let isMouseMoving = false;
-    let mouseTimeout;
-
-    window.addEventListener('mousemove', (e) => {
-        // Show glow on move
-        if (!isMouseMoving) {
-            glow.style.opacity = '1';
-            isMouseMoving = true;
-        }
-
-        // Use requestAnimationFrame for smooth performance
-        requestAnimationFrame(() => {
-            glow.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+    if (typeof VANTA !== 'undefined') {
+        VANTA.WAVES({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x111111,
+            shininess: 20,
+            waveHeight: 10,
+            waveSpeed: 0.5,
+            zoom: 1.2
         });
-
-        // Hide after 2 seconds of inactivity
-        clearTimeout(mouseTimeout);
-        mouseTimeout = setTimeout(() => {
-            glow.style.opacity = '0';
-            isMouseMoving = false;
-        }, 2000);
-    }, { passive: true });
-    
-    // Hide when mouse leaves the window
-    window.addEventListener('mouseout', (e) => {
-        if (!e.relatedTarget && !e.toElement) {
-            glow.style.opacity = '0';
-            isMouseMoving = false;
-        }
-    });
+    }
 });
