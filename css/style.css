@@ -3198,3 +3198,92 @@ h4 {
     grid-template-columns: 1fr;
   }
 }
+
+/* ========================================
+   HOME PAGE FUN ANIMATIONS & FAQ
+   ======================================== */
+
+.fun-card {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+  cursor: default;
+}
+
+.fun-card:hover {
+  transform: translateY(-8px) rotate(2deg) scale(1.02);
+  box-shadow: 0 15px 35px rgba(245, 158, 11, 0.15);
+  border-color: var(--color-accent);
+}
+
+.fun-card:nth-child(2):hover {
+  transform: translateY(-8px) rotate(-2deg) scale(1.02);
+  box-shadow: 0 15px 35px rgba(234, 88, 12, 0.15);
+  border-color: var(--color-accent-2);
+}
+
+.fun-card:nth-child(3):hover {
+  transform: translateY(-8px) rotate(2deg) scale(1.02);
+  box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15);
+  border-color: var(--color-success);
+}
+
+/* Accordion FAQ */
+.faq-details {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.faq-details:hover {
+  background: var(--color-bg-card-hover);
+}
+
+.faq-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none; /* Hide default arrow */
+}
+
+/* Hide default marker for webkit */
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-accent);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.faq-details[open] .faq-icon {
+  transform: rotate(45deg);
+  color: var(--color-danger);
+}
+
+.faq-content {
+  padding: 0 var(--space-lg) var(--space-md) var(--space-lg);
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  animation: faqReveal 0.4s ease-out forwards;
+}
+
+@keyframes faqReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

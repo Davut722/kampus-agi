@@ -32,195 +32,58 @@ export const TEMPLATES = {
                 </div>
             </section>
 
-            <!-- Features Section -->
+            <!-- Fun Features Section -->
             <section class="home-features container" style="padding-bottom: var(--space-xl);">
                 <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg);">
-                    <div class="feature-card" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
-                        <div class="feature-icon" style="color: var(--color-accent); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="shield-check" style="width: 36px; height: 36px;"></i></div>
-                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Gerçek Deneyimler</h3>
-                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.9rem;">Sadece o üniversitede okuyan veya mezun olmuş öğrencilerin dürüst yorumlarını okuyun.</p>
+                    <div class="feature-card fun-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center;">
+                        <div class="feature-icon" style="font-size: 3rem; margin-bottom: var(--space-sm);">🤫</div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Gerçek Dedikodular</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Sadece broşürlerdeki süslü lafları değil, vizelerde kütüphane savaşlarını ve yemekhane sırasını ilk elden öğren.</p>
                     </div>
-                    <div class="feature-card" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
-                        <div class="feature-icon" style="color: var(--color-accent-2); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="scale" style="width: 36px; height: 36px;"></i></div>
-                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Detaylı Kıyaslama</h3>
-                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.9rem;">Ulaşım, yurt, yemekhane ve akademik kadro gibi kriterlerde iki üniversiteyi yan yana görün.</p>
+                    <div class="feature-card fun-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center;">
+                        <div class="feature-icon" style="font-size: 3rem; margin-bottom: var(--space-sm);">🥊</div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Okulları Kapıştır</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Hangi üniversitenin şenlikleri daha iyi? Hangi yurdun interneti kopmuyor? Seç, karşılaştır, tarafını belirle.</p>
                     </div>
-                    <div class="feature-card" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
-                        <div class="feature-icon" style="color: var(--color-success); font-size: 2rem; margin-bottom: var(--space-sm);"><i data-lucide="users" style="width: 36px; height: 36px;"></i></div>
-                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Aktif Topluluk</h3>
-                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.9rem;">Aklınıza takılan soruları sorun, diğer öğrencilerden tavsiye alın ve kampüse hazır gidin.</p>
+                    <div class="feature-card fun-card" style="background: var(--color-bg-card); padding: var(--space-xl) var(--space-lg); border-radius: var(--radius-lg); border: 1px solid var(--color-border); text-align: center;">
+                        <div class="feature-icon" style="font-size: 3rem; margin-bottom: var(--space-sm);">🍕</div>
+                        <h3 class="feature-title" style="margin-bottom: var(--space-xs); font-family: var(--font-heading);">Sosyalleş & Dertleş</h3>
+                        <p class="feature-desc" style="color: var(--color-text-muted); font-size: 0.95rem;">Aynı dertten muzdarip diğer öğrencilerle tanış, not dilen, tavsiye al. Kampüs hayatına 1-0 önde başla.</p>
                     </div>
-                </div>
-            </section>
-
-            <!-- Feed & Sidebar Section -->
-            <section class="home-feed-section container">
-                <!-- Pill Filters -->
-                <div class="feed-filters">
-                    <button class="feed-filter-btn active">En Yeniler</button>
-                    <button class="feed-filter-btn">Popüler</button>
-                    <button class="feed-filter-btn">Kampüs Hayatı</button>
-                    <button class="feed-filter-btn">Bölümler</button>
-                    <button class="feed-filter-btn">Soru & Cevap</button>
-                </div>
-
-                <div class="home-feed-layout">
-                    <!-- Left Column: Feed -->
-                    <div class="feed-column">
-                        
-                        <!-- Mock Post 1 -->
-                        <article class="feed-card">
-                            <div class="feed-card__header">
-                                <div class="feed-card__user">
-                                    <div class="feed-card__avatar">AE</div>
-                                    <div>
-                                        <div class="feed-card__name">Ahmet Erdem</div>
-                                        <div class="feed-card__time">2 saat önce</div>
-                                    </div>
-                                </div>
-                                <span class="feed-card__tag">Kampüs Hayatı</span>
-                            </div>
-                            <h3 class="feed-card__title">Merkez kütüphane vize haftası ne kadar kalabalık oluyor?</h3>
-                            <p class="feed-card__excerpt">Arkadaşlar haftaya vizeler başlıyor. Kampüsteki kütüphanede gecelemek istiyorum ama yer bulmak çok zormuş diye duydum. Sabah kaç gibi gitmek lazım? Alternatif çalışma salonları nereler?</p>
-                            <div class="feed-card__footer">
-                                <div class="feed-action">
-                                    <i data-lucide="heart" class="icon-sm"></i> 24 Beğeni
-                                </div>
-                                <div class="feed-action">
-                                    <i data-lucide="message-square" class="icon-sm"></i> 8 Yorum
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- Mock Post 2 -->
-                        <article class="feed-card">
-                            <div class="feed-card__header">
-                                <div class="feed-card__user">
-                                    <div class="feed-card__avatar">ZY</div>
-                                    <div>
-                                        <div class="feed-card__name">Zeynep Yılmaz</div>
-                                        <div class="feed-card__time">5 saat önce</div>
-                                    </div>
-                                </div>
-                                <span class="feed-card__tag">Bölümler</span>
-                            </div>
-                            <h3 class="feed-card__title">Bilgisayar Mühendisliği 1. Sınıf Laptop Önerisi</h3>
-                            <p class="feed-card__excerpt">Selamlar, bu sene bilgisayar mühendisliğine başlıyorum. Bütçem çok yüksek değil ama beni 4 yıl idare edecek, kod yazarken üzmeyecek bir laptop arıyorum. M1 işlemcili Mac'ler yeterli olur mu yoksa Windows mu tercih etmeliyim?</p>
-                            <div class="feed-card__footer">
-                                <div class="feed-action">
-                                    <i data-lucide="heart" class="icon-sm"></i> 45 Beğeni
-                                </div>
-                                <div class="feed-action">
-                                    <i data-lucide="message-square" class="icon-sm"></i> 22 Yorum
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- Mock Post 3 -->
-                        <article class="feed-card">
-                            <div class="feed-card__header">
-                                <div class="feed-card__user">
-                                    <div class="feed-card__avatar">CS</div>
-                                    <div>
-                                        <div class="feed-card__name">Caner Şahin</div>
-                                        <div class="feed-card__time">1 gün önce</div>
-                                    </div>
-                                </div>
-                                <span class="feed-card__tag">Öneriler</span>
-                            </div>
-                            <h3 class="feed-card__title">Yemekhane fiyatları ve alternatif mekanlar</h3>
-                            <p class="feed-card__excerpt">Bu dönem yemekhane fiyatlarına gelen zamdan sonra kampüs dışındaki alternatif mekanları denemeye karar verdim. Doğu kampüs kapısındaki ev yemekleri yapan yer fiyat/performans olarak bayağı iyi. Başka önerisi olan var mı?</p>
-                            <div class="feed-card__footer">
-                                <div class="feed-action">
-                                    <i data-lucide="heart" class="icon-sm"></i> 112 Beğeni
-                                </div>
-                                <div class="feed-action">
-                                    <i data-lucide="message-square" class="icon-sm"></i> 34 Yorum
-                                </div>
-                            </div>
-                        </article>
-
-                        <div class="feed-load-more">
-                            <button class="btn-load-more">Daha Fazla Yükle</button>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Sidebar (Sticky) -->
-                    <aside class="sidebar-column">
-                        <!-- Widget 1: Trending -->
-                        <div class="sidebar-widget">
-                            <h4 class="sidebar-widget__title">🔥 Şu An Gündemde</h4>
-                            <ul class="trending-list">
-                                <li class="trending-item">
-                                    <span class="trending-category">Soru & Cevap</span>
-                                    <span class="trending-topic">Yaz Okulu Ücretleri</span>
-                                </li>
-                                <li class="trending-item">
-                                    <span class="trending-category">Etkinlik</span>
-                                    <span class="trending-topic">Bahar Şenliği 2026 Line-up</span>
-                                </li>
-                                <li class="trending-item">
-                                    <span class="trending-category">Akademik</span>
-                                    <span class="trending-topic">Vize Programı Açıklandı</span>
-                                </li>
-                                <li class="trending-item">
-                                    <span class="trending-category">Kampüs Hayatı</span>
-                                    <span class="trending-topic">Ring Sefer Saatleri Değişikliği</span>
-                                </li>
-                                <li class="trending-item">
-                                    <span class="trending-category">Tartışma</span>
-                                    <span class="trending-topic">Seçmeli Ders Kontenjanları</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Widget 2: Leaderboard -->
-                        <div class="sidebar-widget">
-                            <h4 class="sidebar-widget__title">🏆 Haftanın En Aktifleri</h4>
-                            <div class="leaderboard-list">
-                                <div class="leaderboard-item">
-                                    <div class="leaderboard-avatar">MK</div>
-                                    <div class="leaderboard-info">
-                                        <div class="leaderboard-name">Mehmet K.</div>
-                                        <div class="leaderboard-score">1,250 Puan</div>
-                                    </div>
-                                </div>
-                                <div class="leaderboard-item">
-                                    <div class="leaderboard-avatar">AS</div>
-                                    <div class="leaderboard-info">
-                                        <div class="leaderboard-name">Ayşe S.</div>
-                                        <div class="leaderboard-score">980 Puan</div>
-                                    </div>
-                                </div>
-                                <div class="leaderboard-item">
-                                    <div class="leaderboard-avatar">BD</div>
-                                    <div class="leaderboard-info">
-                                        <div class="leaderboard-name">Burak D.</div>
-                                        <div class="leaderboard-score">845 Puan</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
                 </div>
             </section>
             
-            <!-- FAQ Section -->
-            <section class="home-faq container" style="padding-top: var(--space-2xl); padding-bottom: var(--space-xl);">
-                <h2 class="section-title" style="text-align: center; margin-bottom: var(--space-xl);">Sıkça Sorulan <span>Sorular</span></h2>
-                <div class="faq-list" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-md);">
-                    <div class="faq-item" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
-                        <h4 class="faq-question" style="font-family: var(--font-heading); margin-bottom: 8px; color: var(--color-text); display: flex; align-items: center; gap: 8px;"><i data-lucide="help-circle" style="color: var(--color-accent); width: 20px; height: 20px;"></i> Yorum yazmak için üye olmak zorunda mıyım?</h4>
-                        <p class="faq-answer" style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-left: 28px;">Evet, platformda sahte yorumları engellemek ve güvenilirliği sağlamak adına yorum yazmak ve soru sormak için üyelik gereklidir. Okumak için ise üye olmanıza gerek yoktur.</p>
-                    </div>
-                    <div class="faq-item" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
-                        <h4 class="faq-question" style="font-family: var(--font-heading); margin-bottom: 8px; color: var(--color-text); display: flex; align-items: center; gap: 8px;"><i data-lucide="help-circle" style="color: var(--color-accent); width: 20px; height: 20px;"></i> Üniversitelerin bilgileri güncel mi?</h4>
-                        <p class="faq-answer" style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-left: 28px;">Bilgiler düzenli olarak sistemimiz, yerel öğrenciler ve moderatör ekibimiz tarafından güncellenmektedir. Şehirler arası ulaşım süreleri ve yurt kontenjanları gibi veriler referans niteliğindedir.</p>
-                    </div>
-                    <div class="faq-item" style="background: var(--color-bg-card); padding: var(--space-lg); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
-                        <h4 class="faq-question" style="font-family: var(--font-heading); margin-bottom: 8px; color: var(--color-text); display: flex; align-items: center; gap: 8px;"><i data-lucide="help-circle" style="color: var(--color-accent); width: 20px; height: 20px;"></i> Puanlamalar neye göre yapılıyor?</h4>
-                        <p class="faq-answer" style="color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.6; margin-left: 28px;">Üniversitelerin puanları; öğrencilerin kampüs, eğitim, sosyal hayat ve imkanlar gibi çeşitli kriterlerde verdiği bağımsız puanların otomatik ortalaması alınarak hesaplanır.</p>
-                    </div>
+            <!-- Compact FAQ Section (Interactive) -->
+            <section class="home-faq container" style="max-width: 600px; padding-top: var(--space-lg); padding-bottom: var(--space-xl);">
+                <h2 class="section-title" style="text-align: center; margin-bottom: var(--space-lg);">Merak Edilenler 🧐</h2>
+                <div class="faq-accordion-list" style="display: flex; flex-direction: column; gap: var(--space-sm);">
+                    <details class="faq-details">
+                        <summary class="faq-summary">
+                            <span>Üye olmak şart mı kanka?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </summary>
+                        <div class="faq-content">
+                            <p>Okumak bedava! Ama "şu hocanın sınavları çok zor" diye isyan edeceksen veya soru soracaksan üye olman lazım ki trolleri uzak tutalım.</p>
+                        </div>
+                    </details>
+                    <details class="faq-details">
+                        <summary class="faq-summary">
+                            <span>Üniversitelerin bilgileri güncel mi?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </summary>
+                        <div class="faq-content">
+                            <p>Kanka her şeyi olabildiğince güncel tutmaya çalışıyoruz. Yurtlar, ulaşım falan hepsi sistemde var ama en iyi güncellemeyi yorumlarda okursun.</p>
+                        </div>
+                    </details>
+                    <details class="faq-details">
+                        <summary class="faq-summary">
+                            <span>Puanlamalar neye göre yapılıyor?</span>
+                            <i data-lucide="plus" class="faq-icon"></i>
+                        </summary>
+                        <div class="faq-content">
+                            <p>Bizzat sizlerin oylarıyla! Eğitim, sosyallik, yemekler falan... Herkesin notunun şeffaf ortalamasını alıp sıralıyoruz.</p>
+                        </div>
+                    </details>
                 </div>
             </section>
 
