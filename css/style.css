@@ -3379,3 +3379,33 @@ h4 {
 .blog-expanded-close:hover {
     background: rgba(255,255,255,0.1);
 }
+/* Custom Cursor */
+body {
+    cursor: none; /* Hide default cursor */
+}
+
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    mix-blend-mode: difference;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+    will-change: transform;
+}
+
+.custom-cursor.cursor-hover {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+a, button, .card, .btn {
+    cursor: none !important;
+}
