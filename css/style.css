@@ -3306,9 +3306,13 @@ h4 {
   opacity: 0.1; /* Even more subtle in light mode */
 }
 
+
 /* ========================================
-   MINIMAL CARDS ANIMATION
+   MINIMAL CARDS ANIMATION & MORPHING
    ======================================== */
+.minimal-card {
+  cursor: pointer;
+}
 .minimal-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -3318,4 +3322,60 @@ h4 {
 [data-theme="light"] .minimal-card:hover {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.05);
+}
+
+.blog-expanded-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index: 9990;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.blog-expanded-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.blog-expanded-card {
+    background: var(--color-bg-card);
+    width: 90%;
+    max-width: 800px;
+    height: 80vh;
+    border-radius: 20px;
+    position: relative;
+    padding: 40px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    z-index: 9991;
+    display: none;
+}
+
+.blog-expanded-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.blog-expanded-close:hover {
+    background: rgba(255,255,255,0.1);
 }

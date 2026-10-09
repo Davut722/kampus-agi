@@ -1811,4 +1811,69 @@ export function initGSAPHome() {
             });
         }
     }
+    
+    // Blog Shared Layout Morphing
+    const blogCards = document.querySelectorAll('.blog-card');
+    let overlay = document.querySelector('.blog-expanded-overlay');
+    
+    if (!overlay && blogCards.length > 0) {
+        if (typeof Flip === 'undefined') return;
+        
+        overlay = document.createElement('div');
+        overlay.className = 'blog-expanded-overlay';
+        overlay.innerHTML = 
+            <div class="blog-expanded-card" id="blog-detail-container">
+                <button class="blog-expanded-close"><i data-lucide="x"></i></button>
+                <div class="blog-expanded-content" style="margin-top:20px;"></div>
+            </div>
+        ;
+        document.body.appendChild(overlay);
+        lucide.createIcons();
+        
+        overlay.querySelector('.blog-expanded-close').addEventListener('click', () => {
+            const activeCard = document.querySelector('.blog-card.is-active');
+            if (activeCard) {
+                const detailContainer = document.querySelector('#blog-detail-container');
+                const state = Flip.getState(detailContainer);
+                activeCard.appendChild(detailContainer);
+                overlay.classList.remove('active');
+                activeCard.classList.remove('is-active');
+                
+                Flip.from(state, {
+                    duration: 0.5,
+                    ease: "power3.inOut",
+                    onComplete: () => {
+                        detailContainer.style.display = 'none';
+                    }
+                });
+            }
+        });
+    }
+
+    blogCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('button') || e.target.closest('a')) return;
+            if (typeof Flip === 'undefined') return;
+            
+            const detailContainer = document.querySelector('#blog-detail-container');
+            detailContainer.style.display = 'block';
+            
+            const content = detailContainer.querySelector('.blog-expanded-content');
+            content.innerHTML = card.innerHTML;
+            
+            const state = Flip.getState(card);
+            
+            overlay.appendChild(detailContainer);
+            overlay.classList.add('active');
+            card.classList.add('is-active');
+            
+            Flip.from(state, {
+                duration: 0.6,
+                ease: "power4.inOut",
+                absolute: true,
+                scale: true
+            });
+        });
+    });
+}
 }
