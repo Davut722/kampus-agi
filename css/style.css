@@ -3295,9 +3295,9 @@ h4 {
   position: fixed;
   top: 0;
   left: 0;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0) 60%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(234, 88, 12, 0.15) 25%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
@@ -3309,7 +3309,7 @@ h4 {
 }
 
 [data-theme="light"] #mouse-glow {
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0) 60%);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(234, 88, 12, 0.15) 25%, transparent 60%);
   mix-blend-mode: multiply;
 }
 

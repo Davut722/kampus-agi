@@ -52,6 +52,48 @@ export const TEMPLATES = {
                     </div>
                 </div>
             </section>
+
+            <!-- Minimalist Blog Section -->
+            <section class="home-blog container reveal-up" style="padding-bottom: var(--space-2xl); position: relative; z-index: 10;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-lg);">
+                    <h2 class="section-title" style="margin-bottom: 0;">Son <span>İçerikler</span></h2>
+                    <a href="#/home" style="color: var(--color-accent); font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 4px;">Tümünü Gör <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></a>
+                </div>
+                <div class="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-lg);">
+                    <!-- Blog Card 1 -->
+                    <article class="blog-card minimal-card" style="background: var(--color-bg-card); border-radius: var(--radius-md); border: 1px solid var(--color-border); padding: var(--space-lg); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                        <span style="font-size: 0.75rem; color: var(--color-accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-xs);">Rehber</span>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.15rem; margin-bottom: var(--space-sm); color: var(--color-text); line-height: 1.4;">Üniversite Tercih Sürecinde Dikkat Edilmesi Gerekenler</h3>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: var(--space-md); flex: 1; line-height: 1.6;">Tercih listenizi hazırlarken sıralamalar dışında kampüs olanakları ve akademik kadro gibi detaylara nasıl dikkat etmelisiniz?</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: var(--space-sm); margin-top: auto;">
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">12 Mayıs</span>
+                            <a href="#/home" style="font-size: 0.85rem; font-weight: 500; color: var(--color-text);">Devamını Oku &rarr;</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Card 2 -->
+                    <article class="blog-card minimal-card" style="background: var(--color-bg-card); border-radius: var(--radius-md); border: 1px solid var(--color-border); padding: var(--space-lg); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                        <span style="font-size: 0.75rem; color: var(--color-accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-xs);">Kampüs Hayatı</span>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.15rem; margin-bottom: var(--space-sm); color: var(--color-text); line-height: 1.4;">KYK Yurtları vs. Özel Yurtlar: Hangisi Avantajlı?</h3>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: var(--space-md); flex: 1; line-height: 1.6;">Barınma maliyetleri, giriş-çıkış saatleri ve sosyal olanaklar açısından devlet yurtları ile özel yurtların detaylı bir kıyaslaması.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: var(--space-sm); margin-top: auto;">
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">5 Mayıs</span>
+                            <a href="#/home" style="font-size: 0.85rem; font-weight: 500; color: var(--color-text);">Devamını Oku &rarr;</a>
+                        </div>
+                    </article>
+
+                    <!-- Blog Card 3 -->
+                    <article class="blog-card minimal-card" style="background: var(--color-bg-card); border-radius: var(--radius-md); border: 1px solid var(--color-border); padding: var(--space-lg); transition: all 0.3s ease; display: flex; flex-direction: column;">
+                        <span style="font-size: 0.75rem; color: var(--color-accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-xs);">Akademik</span>
+                        <h3 style="font-family: var(--font-heading); font-size: 1.15rem; margin-bottom: var(--space-sm); color: var(--color-text); line-height: 1.4;">Mühendislik İçin Staj Bulma Taktikleri</h3>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: var(--space-md); flex: 1; line-height: 1.6;">Henüz 1. sınıftayken bile sektörle iç içe olmak mümkün. Portfolyo hazırlama ve kariyer fuarlarını verimli kullanma rehberi.</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: var(--space-sm); margin-top: auto;">
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">28 Nisan</span>
+                            <a href="#/home" style="font-size: 0.85rem; font-weight: 500; color: var(--color-text);">Devamını Oku &rarr;</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
             
             <!-- Compact FAQ Section (Interactive) -->
             <section class="home-faq container" style="max-width: 600px; padding-top: var(--space-lg); padding-bottom: var(--space-xl);">
