@@ -1595,7 +1595,8 @@ export function renderCurrentRoute() {
         'compare': TEMPLATES.compare,
         'review-form': TEMPLATES.reviewForm,
         'profile': TEMPLATES.profile,
-        'login': TEMPLATES.login
+        'login': TEMPLATES.login,
+        'blog': TEMPLATES.blog
     };
 
     const template = templateMap[route] || TEMPLATES.home;
@@ -1615,8 +1616,8 @@ export function renderCurrentRoute() {
     if (navLinks) navLinks.classList.remove('nav__links--open');
     if (hamburger) hamburger.classList.remove('nav__hamburger--active');
     
-    // Call GSAP initialization if on home route
-    if (route === 'home') {
+    // Call GSAP initialization if on home or blog route
+    if (route === 'home' || route === 'blog') {
         setTimeout(() => {
             if (typeof initGSAPHome === 'function') initGSAPHome();
         }, 100);
@@ -1876,56 +1877,3 @@ export function initGSAPHome() {
         });
     });
 }
-
-
-// --- Custom Cursor & Magnetic Elements ---
-document.addEventListener('DOMContentLoaded', () => {
-    const cursor = document.createElement('div');
-    cursor.classList.add('custom-cursor');
-    document.body.appendChild(cursor);
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    function updateCursor() {
-        cursorX += (mouseX - cursorX) * 0.2;
-        cursorY += (mouseY - cursorY) * 0.2;
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-        requestAnimationFrame(updateCursor);
-    }
-    updateCursor();
-
-    function initMagneticElements() {
-        const clickables = document.querySelectorAll('a, button, .btn, .card');
-        clickables.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-            el.addEventListener('mouseleave', () => {
-                cursor.classList.remove('cursor-hover');
-                if (typeof gsap !== 'undefined') {
-                    gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
-                }
-            });
-            el.addEventListener('mousemove', (e) => {
-                if (typeof gsap === 'undefined') return;
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                // Only move slightly
-                gsap.to(el, { x: x * 0.3, y: y * 0.3, duration: 0.3, ease: 'power2.out' });
-            });
-        });
-    }
-
-    // Run initially and after hash changes
-    initMagneticElements();
-    window.addEventListener('hashchange', () => {
-        setTimeout(initMagneticElements, 300);
-    });
-});
